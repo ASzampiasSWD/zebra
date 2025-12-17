@@ -26,11 +26,6 @@ app.use(express.static('public'));
 // Built-in middleware to parse URL-encoded bodies (form data)
 app.use(express.urlencoded({ extended: true }));
 
-// Serve the static HTML file
-/*app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});*/
-
 // Define a route to render a view
 app.get('/', (req, res) => {
   // Renders the 'home.handlebars' file found in the 'views' folder
@@ -56,7 +51,6 @@ app.get('/list', async (req, res) => {
   //res.render('list', {});
     try {
     const { rows } = await db.query('SELECT * FROM repairs');
-    //res.status(200).json(rows);
 	console.log(JSON.stringify(rows));
 	res.render('list', { title: 'Save the Zebras', rows: JSON.stringify(rows) });
   } catch (err) {
@@ -129,6 +123,33 @@ app.post('/submit-repair', (req, res) => {
 
   res.send(`Form submitted successfully for user: ${userId}`);
 })
+
+app.post('/submit-new-user', async (req, res) => {
+  const { selectOrgId, userId, firstName, lastName } = req.body; // Destructure data from request body
+  console.log('orgId:', selectOrgId);
+  console.log('firstName:', firstName);
+  console.log('lastName:', lastName);
+  const lowerCaseUserId = userId.toLowerCase();
+  const text = 'INSERT INTO users(user_id, org_Id, first_name, last_name) VALUES($1, $2, $3, $4) RETURNING *'; // Parameterized query
+  const values = [lowerCaseUserId, selectOrgId, firstName, lastName]; // Array of values to substitute
+
+  try {
+    const response = await db.query(text, values);
+    // Send back the inserted row as a JSON response
+    //res.status(201).json(response.rows[0]);
+	//res.status(200).send('User has been successfully added. Please refresh browser.');
+	//res.redirect('/list');
+	res.redirect('/');
+  } catch (err) {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+  
+
+  res.send(`Form submitted successfully for user: ${userId}`);
+})
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);

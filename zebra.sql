@@ -11,7 +11,7 @@ CREATE TABLE organizations(
 
 CREATE TABLE users(
  user_id varchar(50) PRIMARY KEY,
- org_id varchar(20) REFERENCES organizations(org_id),
+ org_id varchar(20) REFERENCES organizations(org_id) NOT NULL,
  first_name varchar(100) NOT NULL,
  last_name varchar(100) NOT NULL,
  total_printers_saved integer DEFAULT 0,
