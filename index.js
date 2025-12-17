@@ -55,7 +55,7 @@ app.get('/contact', (req, res) => {
 
 app.get('/news', (req, res) => {
   res.render('news', { title: 'Save the Zebras'});
-})
+});
 
 app.get('/list', async (req, res) => {
   //res.render('list', {});
@@ -67,7 +67,7 @@ app.get('/list', async (req, res) => {
     console.error(err);
     res.status(500).send('Server Error');
   }
-})
+});
 
 app.get('/join', async (req, res) => {
   //res.render('list', {});
@@ -80,7 +80,7 @@ app.get('/join', async (req, res) => {
     console.error(err);
     res.status(500).send('Server Error');
   }
-})
+});
 
 // Example route to get all users
 app.get('/users', async (req, res) => {
@@ -153,11 +153,7 @@ app.post('/submit-repair', async (req, res) => {
 		console.log(err);
 		res.send(err);
 	}
-  
-  
-  
-  
-})
+});
 
 app.post('/submit-new-user', async (req, res) => {
   const { selectOrgId, userId, firstName, lastName } = req.body;
