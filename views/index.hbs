@@ -21,45 +21,34 @@
   <input type="text" id="serialNumberId" name="serialNumberId" required />
   <br />
   <label for="userId">User ID:</label>
-	<select id="userId" name="userId">
-	  <option value="szampiam">szampiam</option>
-	  <option value="mtjere">mtjere</option>
+	<select id="userId" name="userId" required>
 	</select>
   <br />
       <label for="printerType">Printer Type:</label>
-	<select id="printerType" name="printerType" required>
-	  <option value=""></option>
-	  <option value="ZT411">ZT411 SLAM Printer</option>
-	  <option value="ASINPSlip">ASIN PSlip</option>
-	  <option value="hpPrinter">HP Printer</option>
+	<select id="printerType" id="printerType" name="printerType" required>
 	</select>
 	<br />
     <label for="partNameNeeded">Part Name Needed:</label>
-	<select id="partNameNeeded" name="partNameNeeded" required>
-	  <option value=""></option>
-	  <option value="printroller">Print Roller (+45$)</option>
-	  <option value="mediarewindspindle">Media Rewind Spindle (+300$)</option>
-	  <option value="nopartneeded">No Part Needed (FREE)</option>
+	<select id="partNameNeeded" name="partNameNeeded">
 	</select>
 	<br />
 	<label for="printerLocation">Printer Location:</label>
 	<select id="printerLocation" name="printerLocation" onchange="myFunction(event)" required>
 	  <option value=""></option>
-	  <option value="itCage">IT Cage</option>
-	  <option value="singlesMixKickout">Singles-Mix-Kickout</option>
-	  <option value="afe2">AFE2</option>
-	  <option value="afe1">AFE1</option>
-	  <option value="jackpot">Jackpot</option>
-	  <option value="upperMezz">Upper Mezz</option>
-	  <option value="poleNumber">Pole Number</option>
-	  <option value="securityDesk">Security Desk</option>
+	  <option value="IT Cage">IT Cage</option>
+	  <option value="Singles-Mix-Kickout">Singles-Mix-Kickout</option>
+	  <option value="AFE2">AFE2</option>
+	  <option value="AFE1">AFE1</option>
+	  <option value="Jackpot">Jackpot</option>
+	  <option value="Upper Mezz">Upper Mezz</option>
+	  <option value="Pole Number">Pole Number</option>
+	  <option value="Security Desk">Security Desk</option>
 	</select>
 	<label for="stationNumber">Station Number:</label>
 	<input type="input" disabled name="stationNumber" id="stationNumber" />
 	<br />
   <label for="issue">Issue:</label>
-	<select id="issue" name="issue">
-	  <option value=""></option>
+	<select id="issue" name="issue" required>
 	  <option value="brokenPart">Broken Part</option>
 	  <option value="dirtyRoller">Dirty Roller</option>
 	  <option value="dirtyRoller">Calibration Issue</option>
@@ -68,13 +57,57 @@
 	  <option value="multipleIssues">Multiple Issues</option>
 	</select>
 	<br />
-	<label for="assistBy">Assisted By (optional)</label>
-	<input type="text" id="assistBy" name="assistBy" />
+	  <label for="assistBy">Assisted By (optional):</label>
+	<select id="assistBy" name="assistBy">
+	</select>
+	<br />
   <button type="submit">Submit</button>
 </form>
 	<script type="text/javascript">
+	
+	
+	window.onload = function() {
+		let printer_types = {{{printer_types}}};
+		const selectPrinterType = document.getElementById("printerType");
+
+		Object.keys(printer_types).forEach(key => {
+		  const value = printer_types[key];
+		  console.log(key, value.printer_type_id);
+		  let newOption = new Option(value.printer_type_id, value.printer_type_id);
+		  selectPrinterType.add(newOption);
+		});
+		
+		let active_users = {{{active_users}}};
+		const selectUserId = document.getElementById("userId");
+		const selectAssistBy = document.getElementById("assistBy");
+		let blankOption = new Option("", "");
+		let blankOption2 = new Option("", "");
+		selectAssistBy.add(blankOption2);
+		Object.keys(active_users).forEach(key => {
+		  const value = active_users[key];
+		  console.log(key, value.userId);
+		  let newOption = new Option(value.user_id, value.user_id);
+		  let newOption1 = new Option(value.user_id, value.user_id);
+		  selectUserId.add(newOption);
+		  selectAssistBy.add(newOption1);
+		});
+		
+		let printer_parts= {{{printer_parts}}};
+		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
+		selectPrinterPartNeeded.add(blankOption);
+		Object.keys(printer_parts).forEach(key => {
+		  const value = printer_parts[key];
+		  console.log(key, value.printer_part_id);
+		  let newOption = new Option(value.printer_part_name, value.printer_part_id);
+		  selectPrinterPartNeeded.add(newOption);
+		});
+		
+	}
+	
+	
+	
 	function myFunction(e) {
-	if (e.target.value != "itCage" && e.target.value != "" && e.target.value != "securityDesk") {
+	if (e.target.value != "IT Cage" && e.target.value != "" && e.target.value != "Security Desk") {
 		document.getElementById('stationNumber').disabled = false;
 	} else {
 		document.getElementById('stationNumber').disabled = true;

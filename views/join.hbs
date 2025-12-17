@@ -18,19 +18,19 @@
 <h3>Add User</h3>
 <form action="/submit-new-user" method="POST">
   <label for="selectOrgId">Org ID:</label>
-	<select id="selectOrgId" name="selectOrgId" required>
+	<select id="selectOrgId" name="selectOrgId" onchange="selectOrgIdChanged(event)" required>
 	</select>
 	<br />
    <label for="userId">Amazon User ID:</label>
-	<input type="input" name="userId" required />
+	<input type="input" name="userId" maxlength="12" required />
 	<br />
     <label for="firstName">First Name:</label>
-	<input type="input" name="firstName" required />
+	<input type="input" maxlength="50" name="firstName" required />
 	<br />
 	<label for="lastName">Last Name:</label>
-	<input type="input" name="lastName" required />
+	<input type="input" maxlength="50" name="lastName" required />
 	<br />
-  <button type="submit">Submit</button>
+  <button id="submitBtn" type="submit">Submit</button>
 </form>
 
 <script type="text/javascript">
@@ -51,6 +51,15 @@ Object.keys(rows).forEach(key => {
 let lastOption = new Option('Message szampiam if org is not listed', 'noOrgFound');
 selectElement.add(lastOption);
 }
+
+function selectOrgIdChanged(e) {
+if (e.target.value != "noOrgFound") {
+	document.getElementById('submitBtn').disabled = false;
+} else {
+	document.getElementById('submitBtn').disabled = true;
+}
+}
+
 
 </script>
 

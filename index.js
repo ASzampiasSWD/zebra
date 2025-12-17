@@ -7,7 +7,7 @@ const app = express();
 const port = 3000;
 var pg = require('pg');
 const db = require('./db'); // Import the database module
-
+var favicon = require('serve-favicon');
 // Set up Handlebars view engine
 
 app.engine('.hbs', exphbs.engine({ // Note the .engine here
@@ -17,22 +17,32 @@ app.engine('.hbs', exphbs.engine({ // Note the .engine here
 }))
 
 app.set('view engine', '.hbs');
-app.set('views', path.join(process.cwd(), 'views')); // Set the views directory
-//app.set('views', './views');
-
-// Serve static files from the 'public' directory
+app.set('views', path.join(process.cwd(), 'views'));
 app.use(express.static('public')); 
+app.use(favicon(path.join(__dirname,'public','styles','favicon.ico')));
 
 // Built-in middleware to parse URL-encoded bodies (form data)
 app.use(express.urlencoded({ extended: true }));
 
 // Define a route to render a view
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   // Renders the 'home.handlebars' file found in the 'views' folder
-  res.render('index', { 
+  /*res.render('index', { 
     title: 'Save the Zebras', 
     message: 'This is a dynamic message.' 
-  });
+  });*/
+   try {
+    let printerTypes = await db.query('SELECT printer_type_id FROM printer_types');
+	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
+	let printerParts = await db.query('SELECT * FROM printer_parts');
+	res.render('index', { title: 'Save the Zebras', 
+						  printer_types: JSON.stringify(printerTypes.rows),
+						  active_users: JSON.stringify(activeUsers.rows),
+						  printer_parts: JSON.stringify(printerParts.rows) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
 })
 
 app.get('/about', (req, res) => {
@@ -83,36 +93,9 @@ app.get('/users', async (req, res) => {
   }
 });
 
-/*
-app.get('/about.html', (req, res) => {
-  res.sendFile(__dirname + '/about.html');
-});
-
-app.get('/contact.html', (req, res) => {
-  res.sendFile(__dirname + '/contact.html');
-});
-
-app.get('/news.html', (req, res) => {
-  res.sendFile(__dirname + '/news.html');
-});
-
-app.get('/list.html', (req, res) => {
-  res.sendFile(__dirname + '/list.html');
-});
-
-app.get('/join.html', (req, res) => {
-  res.sendFile(__dirname + '/join.html');
-});*/
-
 // Define the POST route to handle form submission
-app.post('/submit-repair', (req, res) => {
-  const serialNumberId = req.body.serialNumberId;
-  const userId = req.body.userId;
-  const printerType = req.body.printerType;
-  const partNameNeeded = req.body.partNameNeeded;
-  const printerLocation = req.body.printerLocation;
-  const stationNumber = req.body.stationNumber;
-  const issue = req.body.issue;
+app.post('/submit-repair', async (req, res) => {
+  let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy } = req.body;
 
   console.log('serialNumberId:', serialNumberId);
   console.log('userId:', userId);
@@ -120,12 +103,64 @@ app.post('/submit-repair', (req, res) => {
   console.log('printerLocation:', printerLocation);
   console.log('stationNumber:', stationNumber);
   console.log('issue', issue);
+  
+  if (assistBy == "") {
+	assistBy = null;
+  }
+  if (stationNumber == "") {
+	stationNumber = null;
+  }
+  if (partNameNeeded == "") {
+	partNameNeeded = null;
+  }
+  
+  
+  const text1 = 'SELECT * FROM printers WHERE serial_number_id = $1'; // Parameterized query
+  const values = [serialNumberId]; // Array of values to substitute
+  let printerExists = true;
+    try {
+    const response = await db.query(text1, values);
+	if (response.rows.length == 0) {
+		printerExists = false;
+	}
 
-  res.send(`Form submitted successfully for user: ${userId}`);
+  } catch (err) {	
+	console.log(err)	
+    //res.status(500).json({ error: 'Internal Server Error' });
+  }
+  
+  if (printerExists == false) {
+		//res.send('Go on');
+		const text3 = 'INSERT INTO printers(serial_number_id, printer_type, times_worked_on) VALUES($1, $2, $3) RETURNING *'; // Parameterized query
+		const values2 = [serialNumberId, printerType, 1]; // Array of values to substitute
+		try {
+		const response3 = await db.query(text3, values2);
+		console.log(response3);
+		res.send(response3);
+		} catch (err) {
+			console.log(err);
+			res.send(err);
+		}
+  }
+  
+	const text4 = 'INSERT INTO repairs(serial_number_id, printer_type, user_id, assist_id, printer_part_id, printer_location, station_number, time_worked_on, issue) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *'; // Parameterized query
+	const values4 = [serialNumberId, printerType, userId, assistBy, partNameNeeded, printerLocation, stationNumber, 45, issue]; // Array of values to substitute
+	try {
+	const response4 = await db.query(text4, values4);
+	console.log(response4);
+	res.send(response4);
+	} catch (err) {
+		console.log(err);
+		res.send(err);
+	}
+  
+  
+  
+  
 })
 
 app.post('/submit-new-user', async (req, res) => {
-  const { selectOrgId, userId, firstName, lastName } = req.body; // Destructure data from request body
+  const { selectOrgId, userId, firstName, lastName } = req.body;
   console.log('orgId:', selectOrgId);
   console.log('firstName:', firstName);
   console.log('lastName:', lastName);
@@ -135,18 +170,14 @@ app.post('/submit-new-user', async (req, res) => {
 
   try {
     const response = await db.query(text, values);
-    // Send back the inserted row as a JSON response
-    //res.status(201).json(response.rows[0]);
-	//res.status(200).send('User has been successfully added. Please refresh browser.');
-	//res.redirect('/list');
 	res.redirect('/');
-  } catch (err) {
-    console.error(err.stack);
+  } catch (err) {	
+	if (err.detail.includes('already exists.')) {
+		res.status(500).send(`Error: ${userId} already exists.`);
+	}	
     res.status(500).json({ error: 'Internal Server Error' });
   }
-  
-
-  res.send(`Form submitted successfully for user: ${userId}`);
+	//res.send(`Form submitted successfully for user: ${userId}`);
 })
 
 
