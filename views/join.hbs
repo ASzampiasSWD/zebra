@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Save the Zebras</title>
+  <link type="text/css" rel="stylesheet" href="styles/index.css" />
+</head>
+
+<body>
+{{{body}}}
+<ul>
+  <li><a href="/">Add Repair</a></li>
+  <li><a href="list">Fixed Printer List</a></li>
+  <li><a href="news">News</a></li>
+  <li><a href="contact">Contact</a></li>
+  <li><a href="about">About</a></li>
+  <li><a href="join" id="navSelected">Want to join? Add User!</a></li>
+</ul>
+<h3>Add User</h3>
+<form action="/submit-new-user" method="POST">
+  <label for="selectOrgId">Org ID:</label>
+	<select id="selectOrgId" name="selectOrgId" required>
+	</select>
+  <br />
+   <label for="user_id">Amazon User ID:</label>
+	<input type="input" name="userID" required />
+	<br />
+    <label for="firstName">First Name:</label>
+	<input type="input" name="firstName" required />
+	<br />
+	<label for="lastName">Last Name:</label>
+	<input type="input" name="lastName" required />
+	<br />
+  <button type="submit">Submit</button>
+</form>
+
+<script type="text/javascript">
+
+window.onload = function() {
+
+let rows = {{{rows}}};
+console.log(rows);
+console.log(rows[0].org_id);
+const selectElement = document.getElementById("selectOrgId");
+
+Object.keys(rows).forEach(key => {
+  const value = rows[key];
+  console.log(key, value.org_id);
+  let newOption = new Option(value.org_id, value.org_id);
+  selectElement.add(newOption);
+});
+let lastOption = new Option('Message szampiam if org is not listed', 'noOrgFound');
+selectElement.add(lastOption);
+}
+
+</script>
+
+
+</body>
+</html>
