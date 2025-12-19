@@ -69,8 +69,12 @@ CREATE TABLE repairs(
 INSERT INTO organizations VALUES ('ORF3', '2020 Northgate Commerce Pkwy', 'Suffolk', 'VA', '23435', 'USA');
 INSERT INTO organizations VALUES ('ORF2', '5045 Portsmouth Blvd', 'Chesapeake', 'VA', '23321', 'USA');
 INSERT INTO organizations VALUES ('ORF4', '1795 Dam Neck Rd', 'Virginia Beach', 'VA', '23453', 'USA');
+INSERT INTO organizations VALUES ('SVA2', '2000 Enterprise Pkwy', 'Hampton', 'VA', '23666', 'USA');
 INSERT INTO users VALUES ('szampiam', 'ORF3', 'Amanda', 'Szampias');
-INSERT INTO printer_types VALUES ('ZT411', 'Zebra');
+INSERT INTO printer_types VALUES ('ZT411 SLAM Printer', 'Zebra');
+INSERT INTO printer_types VALUES ('ZT411 RFID Printer', 'Zebra');
+INSERT INTO printer_types VALUES ('ZD261 PSlip Printer', 'Zebra');
+INSERT INTO printer_types VALUES ('ZD620 ASIN Mobile Carts Printer', 'Zebra');
 INSERT INTO ISSUES VALUES (DEFAULT, 'Dirty Roller');
 INSERT INTO ISSUES VALUES (DEFAULT, 'Broken Media Rewind Spindle');
 INSERT INTO ISSUES VALUES (DEFAULT, 'Configuration Issue');
