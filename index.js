@@ -32,7 +32,7 @@ app.get('/', async (req, res) => {
     message: 'This is a dynamic message.' 
   });*/
    try {
-    let printerTypes = await db.query('SELECT printer_type_id FROM printer_types');
+    let printerTypes = await db.query('SELECT printer_type FROM printer_types');
 	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
 	let printerParts = await db.query('SELECT * FROM printer_parts');
 	res.render('index', { title: 'Save the Zebras', 
@@ -47,6 +47,10 @@ app.get('/', async (req, res) => {
 
 app.get('/about', (req, res) => {
   res.render('about', { title: 'Save the Zebras'});
+})
+
+app.get('/tester', (req, res) => {
+  res.render('tester', { title: 'Save the Zebras'});
 })
 
 app.get('/contact', (req, res) => {

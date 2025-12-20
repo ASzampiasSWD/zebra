@@ -32,8 +32,8 @@ CREATE TABLE printers(
  printer_type varchar(100) REFERENCES printer_types(printer_type),
  warranty_start_date date DEFAULT NULL,
  warranty_end_date date DEFAULT NULL,
- is_decommisioned boolean DEFAULT false,
- decommisioned_date date DEFAULT NULL,
+ is_active boolean DEFAULT true,
+ decommissioned_date date DEFAULT NULL,
  times_worked_on integer DEFAULT 0,
  money_spent_on_repairs numeric(10, 2) DEFAULT 0.00,
  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
@@ -74,10 +74,10 @@ INSERT INTO organizations VALUES ('ORF2', '5045 Portsmouth Blvd', 'Chesapeake', 
 INSERT INTO organizations VALUES ('ORF4', '1795 Dam Neck Rd', 'Virginia Beach', 'VA', '23453', 'USA');
 INSERT INTO organizations VALUES ('SVA2', '2000 Enterprise Pkwy', 'Hampton', 'VA', '23666', 'USA');
 INSERT INTO users VALUES ('szampiam', 'ORF3', 'Amanda', 'Szampias');
-INSERT INTO printer_types VALUES ('SLAM Printer', 'Zebra');
-INSERT INTO printer_types VALUES ('RFID Printer', 'Zebra');
-INSERT INTO printer_types VALUES ('PSlip Printer', 'Zebra');
-INSERT INTO printer_types VALUES ('ASIN Mobile Carts Printer', 'Zebra');
+INSERT INTO printer_types VALUES ('SLAM Printer', 'Zebra', '2200');
+INSERT INTO printer_types VALUES ('RFID Printer', 'Zebra', '1000');
+INSERT INTO printer_types VALUES ('PSlip Printer', 'Zebra', '2200');
+INSERT INTO printer_types VALUES ('ASIN Mobile Carts Printer', 'Zebra', '700');
 INSERT INTO ISSUES VALUES (DEFAULT, 'Dirty Roller');
 INSERT INTO ISSUES VALUES (DEFAULT, 'Broken Media Rewind Spindle');
 INSERT INTO ISSUES VALUES (DEFAULT, 'Configuration Issue');
