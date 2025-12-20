@@ -67,13 +67,80 @@
 
 <br /><br />
 
-<h3>Table to be added here</h3>
-{{{rows}}}
+<h3>Repairs</h3>
+
+
+<table class="table" id="repairTable">
+  <thead>
+    <tr>
+      <th scope="col">Repair ID</th>
+      <th scope="col">Serial Number</th>
+      <th scope="col">Printer Type</th>
+      <th scope="col">User ID</th>
+	  <th scope="col">Location</th>
+	  <th scope="col">Station ID</th>
+	   <th scope="col">Money Saved</th>
+	  <th scope="col">Date/Time Fixed</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+
+
+
+
 
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script>
+window.onload = function() {
+  let tableBody = document.getElementById("repairTable");
+  // Create an HTML string for the new row
+  let rows = {{{rows}}};
+  console.log(rows);
+
+
+Object.keys(rows).forEach(key => {
+  const value = rows[key];
+
+  // Insert a new row at the end of the tbody (-1 index means the last position)
+  let newRow = tableBody.insertRow(-1);
+
+  // Insert new cells into the row in the correct order (index starts at 0)
+  let cell1 = newRow.insertCell(0);
+  let cell2 = newRow.insertCell(1);
+  let cell3 = newRow.insertCell(2);
+  let cell4 = newRow.insertCell(3);
+  let cell5 = newRow.insertCell(4);
+  let cell6 = newRow.insertCell(5);
+  let cell7 = newRow.insertCell(6);
+  let cell8 = newRow.insertCell(7);
+
+  // Add data to the cells
+  cell1.innerHTML = value.repair_id;
+  cell2.innerHTML = value.serial_number_id;
+  cell3.innerHTML = value.printer_type;
+  cell4.innerHTML = value.user_id;
+  cell5.innerHTML = value.printer_location;
+  cell6.innerHTML = value.station_number;
+  cell7.innerHTML = '$' + value.money_saved;
+  cell8.innerHTML = value.date_time_fixed;
+
+  // Insert the HTML string immediately before the end of the tbody (effectively adding to the end)
+  //tableBody.insertAdjacentHTML('beforeend', newRow);
+  
+  });
+}
+
+
+
+</script>
+
 
 </body>
 </html>

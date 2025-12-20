@@ -89,3 +89,4 @@ INSERT INTO printer_parts VALUES ('P1058930-080', 'Platen Roller', 'SLAM Printer
 INSERT INTO printer_parts VALUES ('79867M', 'Driver Belt 300DPI', 'SLAM Printer', '30.96', 1);
 INSERT INTO printers VALUES ('99J204901059', 'SLAM Printer', '2021-01-13', '2022-01-13');
 INSERT INTO repairs VALUES (DEFAULT, '99J204901059', 'SLAM Printer', 'szampiam', NULL, 'IT Cage', NULL, 45, NULL, 263.55);
+INSERT INTO repairs VALUES (DEFAULT, '99J204901059', 'SLAM Printer', 'szampiam', NULL, 'Singles', '4-11', 45, 'boots', 555.55);
