@@ -32,7 +32,7 @@ app.get('/', async (req, res) => {
     message: 'This is a dynamic message.' 
   });*/
    try {
-    let printerTypes = await db.query('SELECT printer_type FROM printer_types');
+    let printerTypes = await db.query('SELECT printer_type, current_cost FROM printer_types');
 	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
 	let printerParts = await db.query('SELECT * FROM printer_parts');
 	res.render('index', { title: 'Save the Zebras', 
@@ -49,8 +49,25 @@ app.get('/about', (req, res) => {
   res.render('about', { title: 'Save the Zebras'});
 })
 
-app.get('/tester', (req, res) => {
-  res.render('tester', { title: 'Save the Zebras'});
+app.get('/tester', async (req, res) => {
+ // res.render('tester', { title: 'Save the Zebras'});
+   // Renders the 'home.handlebars' file found in the 'views' folder
+  /*res.render('index', { 
+    title: 'Save the Zebras', 
+    message: 'This is a dynamic message.' 
+  });*/
+   try {
+    let printerTypes = await db.query('SELECT printer_type FROM printer_types');
+	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
+	let printerParts = await db.query('SELECT * FROM printer_parts');
+	res.render('tester', { title: 'Save the Zebras', 
+						  printer_types: JSON.stringify(printerTypes.rows),
+						  active_users: JSON.stringify(activeUsers.rows),
+						  printer_parts: JSON.stringify(printerParts.rows) });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
 })
 
 app.get('/contact', (req, res) => {
@@ -99,7 +116,7 @@ app.get('/users', async (req, res) => {
 
 // Define the POST route to handle form submission
 app.post('/submit-repair', async (req, res) => {
-  let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy } = req.body;
+  let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, money_saved } = req.body;
 
   console.log('serialNumberId:', serialNumberId);
   console.log('userId:', userId);
@@ -107,6 +124,9 @@ app.post('/submit-repair', async (req, res) => {
   console.log('printerLocation:', printerLocation);
   console.log('stationNumber:', stationNumber);
   console.log('issue', issue);
+  console.log('timeSpentOnTask', timeSpentOnTask);
+  console.log('comments', comments);
+   console.log('moneySaved', money_saved);
   
   if (assistBy == "") {
 	assistBy = null;
@@ -119,23 +139,20 @@ app.post('/submit-repair', async (req, res) => {
   }
   
   
-  const text1 = 'SELECT * FROM printers WHERE serial_number_id = $1'; // Parameterized query
-  const values = [serialNumberId]; // Array of values to substitute
+  const text1 = 'SELECT * FROM printers WHERE serial_number_id = $1';
+  const values = [serialNumberId];
   let printerExists = true;
     try {
     const response = await db.query(text1, values);
 	if (response.rows.length == 0) {
 		printerExists = false;
 	}
-
-  } catch (err) {	
-	console.log(err)	
-    //res.status(500).json({ error: 'Internal Server Error' });
+  } catch (err) {
+	console.log(err)
   }
   
   if (printerExists == false) {
-		//res.send('Go on');
-		const text3 = 'INSERT INTO printers(serial_number_id, printer_type, times_worked_on) VALUES($1, $2, $3) RETURNING *'; // Parameterized query
+		const text3 = 'INSERT INTO printers(serial_number_id, printer_type, times_worked_on) VALUES($1, $2, $3) RETURNING *';
 		const values2 = [serialNumberId, printerType, 1]; // Array of values to substitute
 		try {
 		const response3 = await db.query(text3, values2);
@@ -147,8 +164,10 @@ app.post('/submit-repair', async (req, res) => {
 		}
   }
   
-	const text4 = 'INSERT INTO repairs(serial_number_id, printer_type, user_id, assist_id, printer_part_id, printer_location, station_number, time_worked_on, issue) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *'; // Parameterized query
-	const values4 = [serialNumberId, printerType, userId, assistBy, partNameNeeded, printerLocation, stationNumber, 45, issue]; // Array of values to substitute
+	const text4 = 'INSERT INTO repairs(serial_number_id, printer_type, user_id, assist_id, printer_location, station_number, time_worked_on, comments, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *'; // Parameterized query
+	const values4 = [serialNumberId, printerType, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, money_saved]; // Array of values to substitute
+	//printer_part_id needed
+	//issue needed
 	try {
 	const response4 = await db.query(text4, values4);
 	console.log(response4);

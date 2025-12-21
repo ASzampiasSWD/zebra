@@ -13,11 +13,11 @@
 		<style>
 		
 		body {
-      /*background-image: linear-gradient(120deg, 
+      background-image: linear-gradient(120deg, 
                                       #9de7fa 0%, 
-									  #A7BFE8 100%);*/
-                                    /*#f89fba 100%);*/
-	  background-color: #def;
+									  #A7BFE8 100%);
+                                    /*#f89fba 100%);*
+	 /* background-color: #def;*/
       color: black;
       font-family: "Poppins", sans-serif;
      min-height: 100vh;
@@ -64,26 +64,33 @@
   </div>
 </nav>
 <br /><br />
-<h2>Add Printer Repair Below</h2>
-<form action="/submit-repair" method="POST">
-  <label for="serialNumberId">Serial Number</label>
-  <input type="text" id="serialNumberId" name="serialNumberId" required />
-  <br />
-  <label for="userId">User ID:</label>
-	<select id="userId" name="userId" required>
-	</select>
-  <br />
-      <label for="printerType">Printer Type:</label>
-	<select id="printerType" id="printerType" name="printerType" required>
-	</select>
-	<br />
-    <label for="partNameNeeded">Part Name Needed:</label>
-	<select id="partNameNeeded" name="partNameNeeded">
-	</select>
-	<br />
-	<label for="printerLocation">Printer Location:</label>
-	<select id="printerLocation" name="printerLocation" onchange="myFunction(event)" required>
-	  <option value=""></option>
+<div class="container">
+	<h2>Add Printer Repair</h2>
+	<hr />
+      <form action="/submit-repair" method="POST" onsubmit="return clickButton()">
+	  
+	  <div class="form-row">
+        <!-- Form elements go here -->
+
+        <div class="form-group col-md-6">
+          <label for="serialNumberId" class="form-label">Serial Number ID</label>
+          <input type="text" class="form-control" id="serialNumberId" placeholder="Serial Number ID" name="serialNumberId" maxlength="22" required />
+        </div>
+		
+		</div>
+		<div class="form-row">
+		<div class="form-group col-md-6">
+		    <label for="printerType" class="form-label">Printer Type</label>
+			<select id="printerType" name="printerType" onchange="recordPrinterType(event)" class="form-select form-control form-select-lg" required>
+			</select>	
+		</div>
+		
+		</div>
+		
+				<div class="form-row">
+		<div class="form-group col-md-6">
+		    		<label for="printerLocation" class="form-label">Printer Location</label>
+	<select id="printerLocation" name="printerLocation" class="form-select form-control form-select-lg" onchange="myFunction(event)" required>
 	  <option value="IT Cage">IT Cage</option>
 	  <option value="Singles-Mix-Kickout">Singles-Mix-Kickout</option>
 	  <option value="AFE2">AFE2</option>
@@ -93,11 +100,37 @@
 	  <option value="Pole Number">Pole Number</option>
 	  <option value="Security Desk">Security Desk</option>
 	</select>
-	<label for="stationNumber">Station Number:</label>
-	<input type="input" disabled name="stationNumber" id="stationNumber" />
-	<br />
-  <label for="issue">Issue:</label>
-	<select id="issue" name="issue" required>
+		</div>
+		
+		<div class="form-group col-md-6">
+					<label for="stationNumber" class="form-label">Station Number</label>
+	<input type="text" disabled name="stationNumber" class="form-control w-50" placeholder="Optional" id="stationNumber" />
+		
+		
+		</div>
+		
+		
+		</div>
+		
+		
+		
+		
+
+
+			
+
+		
+		
+		<div class="form-row">
+				<div class="form-group col-md-6">
+		 <label for="partNameNeeded" class="form-label">Part Name Needed</label>
+		<select id="partNameNeeded" name="partNameNeeded" class="form-select form-control" multiple class="form-select form-control form-select-lg w-25" aria-label="multiple select example">
+		</select>
+		
+		</div>
+		<div class="form-group col-md-6">
+		  <label for="issue" class="form-label">Issue</label>
+	<select id="issue" name="issue" multiple class="form-select form-control form-select-lg w-50" required>
 	  <option value="brokenPart">Broken Part</option>
 	  <option value="dirtyRoller">Dirty Roller</option>
 	  <option value="dirtyRoller">Calibration Issue</option>
@@ -105,15 +138,57 @@
 	  <option value="dirtyRoller">Incorrect Printer Paper Inserted</option>
 	  <option value="multipleIssues">Multiple Issues</option>
 	</select>
-	<br />
-	  <label for="assistBy">Assisted By (optional):</label>
-	<select id="assistBy" name="assistBy">
-	</select>
-	<br />
-  <button type="submit">Submit</button>
-</form>
+		
+		
+		</div>
+		
+		</div>
+		
+		
+
+	
+	<div class="form-row">
+			<div class="form-group col-md-3">
+		  <label for="userId" class="form-label">User ID</label><br />
+		  <select id="userId" name="userId" class="form-select form-control form-select-lg" required>
+		  </select>
+		</div>
+	
+			<div class="form-group col-md-3">
+		  <label for="timeSpentOnTask" class="form-label">Minutes Spent On Task</label>
+		<input type="number" id="timeSpentOnTask" name="timeSpentOnTask" class="form-control" />
+		</div>
+	
+		
+		
+		<div class="form-group col-md-3">
+		  <label for="assistBy" class="form-label">Assisted By (optional)</label>
+		<select id="assistBy" name="assistBy" class="form-select form-control form-select-lg">
+			</select>
+		</div>
+		
+		
+	
+		</div>
+		
+	
+		<div class="form-row">
+			<div class="form-group col-md-9">
+  <label for="comments" class="form-label">Comments</label>
+  <textarea class="form-control" id="comments" name="comments" maxlength="100" placeholder="Optional" rows="3"></textarea>
+  </div>
+</div>
+		
+        <input type="hidden" value="100.00" name="money_saved" id="money_saved" />
+		<button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+      </form>
+ </div>
+</div>
+
 	<script type="text/javascript">
 	
+	let printerOption = 0;
+	let partNameNeeded = [];
 	
 	window.onload = function() {
 		let printer_types = {{{printer_types}}};
@@ -121,10 +196,12 @@
 
 		Object.keys(printer_types).forEach(key => {
 		  const value = printer_types[key];
-		  console.log(key, value.printer_type);
+		  console.log(key, value.printer_type, value.current_cost);
 		  let newOption = new Option(value.printer_type, value.printer_type);
 		  selectPrinterType.add(newOption);
 		});
+		
+		console.log(printer_types[printerOption].current_cost + " IT WORKSSS!");
 		
 		let active_users = {{{active_users}}};
 		const selectUserId = document.getElementById("userId");
@@ -143,7 +220,7 @@
 		
 		let printer_parts= {{{printer_parts}}};
 		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
-		selectPrinterPartNeeded.add(blankOption);
+		//selectPrinterPartNeeded.add(blankOption);
 		Object.keys(printer_parts).forEach(key => {
 		  const value = printer_parts[key];
 		  console.log(key, value.printer_part_id);
@@ -151,6 +228,10 @@
 		  selectPrinterPartNeeded.add(newOption);
 		});
 		
+	}
+	
+	function recordPrinterType(e) {
+		printerOption = e.target.value;
 	}
 	
 	
@@ -164,12 +245,16 @@
 	console.log(e.target.value);
 	}
 	
+	function clickButton() {
+	 alert('lets hope it still works!');
+	
+	}
+	
+	
 	</script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-
 
 </body>
 </html>
