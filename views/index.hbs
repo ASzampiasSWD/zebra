@@ -131,12 +131,6 @@
 		<div class="form-group col-md-6">
 		  <label for="issue" class="form-label">Issue</label>
 	<select id="issue" name="issue" multiple class="form-select form-control form-select-lg w-50" required>
-	  <option value="brokenPart">Broken Part</option>
-	  <option value="dirtyRoller">Dirty Roller</option>
-	  <option value="dirtyRoller">Calibration Issue</option>
-	  <option value="dirtyRoller">Configuration Issue</option>
-	  <option value="dirtyRoller">Incorrect Printer Paper Inserted</option>
-	  <option value="multipleIssues">Multiple Issues</option>
 	</select>
 		
 		
@@ -197,11 +191,21 @@
 		Object.keys(printer_types).forEach(key => {
 		  const value = printer_types[key];
 		  console.log(key, value.printer_type, value.current_cost);
-		  let newOption = new Option(value.printer_type, value.printer_type);
+		  let newOption = new Option(value.printer_type_name, value.printer_type_id);
 		  selectPrinterType.add(newOption);
 		});
 		
-		console.log(printer_types[printerOption].current_cost + " IT WORKSSS!");
+		let issues = {{{issues}}};
+		const selectIssues = document.getElementById("issue");
+
+		Object.keys(issues).forEach(key => {
+		  const value = issues[key];
+		  console.log(key, value.issue_description, value.issue_id);
+		  let newOption = new Option(value.issue_description, value.issue_id);
+		  selectIssues.add(newOption);
+		});
+		
+		
 		
 		let active_users = {{{active_users}}};
 		const selectUserId = document.getElementById("userId");
@@ -235,7 +239,6 @@
 	}
 	
 	
-	
 	function myFunction(e) {
 	if (e.target.value != "IT Cage" && e.target.value != "" && e.target.value != "Security Desk") {
 		document.getElementById('stationNumber').disabled = false;
@@ -246,8 +249,21 @@
 	}
 	
 	function clickButton() {
+	  let printer_types = {{{printer_types}}};
+	  let printer_parts = {{{printer_parts}}};
+	  
+	  let printerParts = $('#partNameNeeded').val();
+	  let total = Number(printer_types[printerOption].current_cost);
+	  let totalPrinterPartCost = 0;
+		  
+	$.each(printerParts, function(index, value) {
+		console.log("Index: " + index + ", Value: " + value);
+		totalPrinterPartCost += Number(value);
+	});
+	 alert(total - totalPrinterPartCost);
+	  
+	  
 	 alert('lets hope it still works!');
-	
 	}
 	
 	

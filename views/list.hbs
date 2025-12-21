@@ -67,7 +67,8 @@
 
 <br /><br />
 <div class="w-75 justify-content-center" style="margin: 0 auto;">
-<h2>Repairs</h2>
+
+<h2>Repairs</h2><input class="form-control w-25" type="text" placeholder="Search by User ID..." />
 <hr />
 <table class="table table-bordered" id="repairTable">
   <thead>
@@ -123,7 +124,7 @@ Object.keys(rows).forEach(key => {
   // Add data to the cells
   cell1.innerHTML = value.repair_id;
   cell2.innerHTML = value.serial_number_id;
-  cell3.innerHTML = value.printer_type;
+  cell3.innerHTML = value.printer_type_name;
   cell4.innerHTML = value.user_id;
   cell5.innerHTML = value.printer_location;
   cell6.innerHTML = value.station_number;
