@@ -112,15 +112,7 @@
 		
 		</div>
 		
-		
-		
-		
 
-
-			
-
-		
-		
 		<div class="form-row">
 				<div class="form-group col-md-6">
 		 <label for="partNameNeeded" class="form-label">Part Name Needed</label>
@@ -173,8 +165,9 @@
   </div>
 </div>
 		
-        <input type="hidden" value="100.00" name="money_saved" id="money_saved" />
+        <input type="hidden" value="0.00" name="money_saved" id="money_saved" />
 		<button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+		<br /><br /><br /><br />
       </form>
  </div>
 </div>
@@ -183,10 +176,12 @@
 	
 	let printerOption = 0;
 	let partNameNeeded = [];
+	let mapPrinterPartCostById = new Map();
 	
 	window.onload = function() {
 		let printer_types = {{{printer_types}}};
 		const selectPrinterType = document.getElementById("printerType");
+		
 
 		Object.keys(printer_types).forEach(key => {
 		  const value = printer_types[key];
@@ -229,6 +224,7 @@
 		  const value = printer_parts[key];
 		  console.log(key, value.printer_part_id);
 		  let newOption = new Option(value.printer_part_name, value.printer_part_id);
+		  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
 		  selectPrinterPartNeeded.add(newOption);
 		});
 		
@@ -251,19 +247,21 @@
 	function clickButton() {
 	  let printer_types = {{{printer_types}}};
 	  let printer_parts = {{{printer_parts}}};
-	  
 	  let printerParts = $('#partNameNeeded').val();
-	  let total = Number(printer_types[printerOption].current_cost);
+
+
+	  let totalPrinterCost = Number(printer_types[printerOption].current_cost);
+	  alert('New Printer Cost: ' + totalPrinterCost);
 	  let totalPrinterPartCost = 0;
-		  
-	$.each(printerParts, function(index, value) {
-		console.log("Index: " + index + ", Value: " + value);
-		totalPrinterPartCost += Number(value);
-	});
-	 alert(total - totalPrinterPartCost);
-	  
-	  
-	 alert('lets hope it still works!');
+	  //alert(printerParts.length);
+	  for (let f = 0; f < printerParts.length; f++) {
+		  alert('PART ID: ' + printerParts[f] + ' with cost: ' + mapPrinterPartCostById.get(printerParts[f]));
+		  totalPrinterPartCost += Number(mapPrinterPartCostById.get(printerParts[f]));
+	  }
+	 let totalValueSaved = totalPrinterCost - totalPrinterPartCost;
+	 alert(totalValueSaved.toFixed(2));
+	 document.getElementById("money_saved").value = totalValueSaved.toFixed(2)
+
 	}
 	
 	

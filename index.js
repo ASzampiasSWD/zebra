@@ -158,10 +158,7 @@ app.post('/submit-repair', async (req, res) => {
 		const text3 = 'INSERT INTO printers(serial_number_id, printer_type_id, times_worked_on) VALUES($1, $2, $3) RETURNING *';
 		const values2 = [serialNumberId, printerType, 1]; // Array of values to substitute
 		try {
-		const response3 = await db.query(text3, values2);
-		console.log(response3.rows[0].repair_id);
-		
-		//res.send(response3);
+			const response3 = await db.query(text3, values2);
 		} catch (err) {
 			console.log(err);
 			res.send(err);
@@ -175,30 +172,55 @@ app.post('/submit-repair', async (req, res) => {
 	//issue needed
 	try {
 	const response4 = await db.query(text4, values4);
-	console.log(response4);
 	repair_id = response4.rows[0].repair_id;
-	//res.send(response4);
 	} catch (err) {
 		console.log(err);
 		res.send(err);
 	}
 	
-	// need to be an array along with printer_parts_used_for_repair
-    const text5 = 'INSERT INTO issues_resolved_on_repair(repair_id, issue_id) VALUES($1, $2) RETURNING *'; // Parameterized query
-	const values5 = [repair_id, issue]; // Array of values to substitute
-	//printer_part_id needed
-	//issue needed
-	try {
-	const response5 = await db.query(text5, values5);
-	console.log(response5);
-	res.send(response5);
-	} catch (err) {
-		console.log(err);
-		res.send(err);
+	let arIssues = [];
+	if (Array.isArray(issue)) {
+		arIssues = issue;
+	} else {
+		arIssues.push(issue);
 	}
 	
+
+	for (let i = 0; i < arIssues.length; i++) {
+		const text5 = 'INSERT INTO issues_resolved_on_repair(repair_id, issue_id) VALUES($1, $2) RETURNING *'; // Parameterized query
+		const values5 = [repair_id, arIssues[i]]; // Array of values to substitute
+		//printer_part_id needed
+		//issue needed
+		try {
+		const response5 = await db.query(text5, values5);
+		//console.log(response5);
+		//res.send(response5);
+		} catch (err) {
+			console.log(err);
+			res.send(err);
+		}
+	}
+	console.log('gatooor');
+	console.log('gator18: ' + partNameNeeded);
+	let arPartNameNeeded = [];
+	if (Array.isArray(partNameNeeded)) {
+		arPartNameNeeded = partNameNeeded;
+	} else {
+		arPartNameNeeded.push(partNameNeeded);
+	}
 	
-	
+
+	for (let d = 0; d < arPartNameNeeded.length; d++) {
+		let text6 = 'INSERT INTO printer_parts_used_for_repair(repair_id, printer_part_id) VALUES($1, $2) RETURNING *'; // Parameterized query
+		let values6 = [repair_id, arPartNameNeeded[d]];
+		try {
+			let response6 = await db.query(text6, values6);
+		} catch (err) {
+			console.log(err);
+			res.send(err);
+		}
+	}
+	res.redirect('/list');
 	
 });
 
