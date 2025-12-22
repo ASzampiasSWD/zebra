@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./style.css" />-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	
+		<style>
+		
+		body {
+      background-image: linear-gradient(120deg, 
+                                      #9de7fa 0%, 
+									  #A7BFE8 100%);
+                                    /*#f89fba 100%);*
+	 /* background-color: #def;*/
+      color: black;
+      font-family: "Poppins", sans-serif;
+     min-height: 100vh;
+}
+
+/*.btn-primary {
+      color: #fff;
+      background-color: #f89fba;
+      border-color: #f89fba;
+}*/
+.containerFormSubmittedMessage {
+      display: flex;
+      flex-direction: column;
+      margin: auto;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+      border: 3px solid whitesmoke;
+}
+		
+		
+		
+		</style>
+</head>
+<body>
+{{{body}}}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="">Zebra Printers</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Add Repair</a>
+      </li>
+	   <li class="nav-item">
+        <a class="nav-link" href="/list">Fixed Printer List</a>
+      </li>
+	   <li class="nav-item">
+        <a class="nav-link" href="/join">Add User</a>
+      </li>
+  </div>
+</nav>
+<br /><br />
+<div class="container">
+	<h2>Add Printer Repair</h2>
+	<hr />
+      <form action="/submit-repair" method="POST">
+	  
+	  <div class="form-row">
+        <!-- Form elements go here -->
+
+        <div class="form-group col-md-6">
+          <label for="serialNumberId" class="form-label">Serial Number ID</label>
+          <input type="text" class="form-control" id="serialNumberId" placeholder="Serial Number ID" name="serialNumberId" maxlength="22" required />
+        </div>
+		
+		</div>
+		<div class="form-row">
+		<div class="form-group col-md-6">
+		    <label for="printerType" class="form-label">Printer Type</label>
+			<select id="printerType" name="printerType" class="form-select form-control form-select-lg" required>
+			</select>	
+		</div>
+		
+		</div>
+		
+				<div class="form-row">
+		<div class="form-group col-md-6">
+		    		<label for="printerLocation" class="form-label">Printer Location</label>
+	<select id="printerLocation" name="printerLocation" class="form-select form-control form-select-lg" onchange="myFunction(event)" required>
+	  <option value="IT Cage">IT Cage</option>
+	  <option value="Singles-Mix-Kickout">Singles-Mix-Kickout</option>
+	  <option value="AFE2">AFE2</option>
+	  <option value="AFE1">AFE1</option>
+	  <option value="Jackpot">Jackpot</option>
+	  <option value="Upper Mezz">Upper Mezz</option>
+	  <option value="Pole Number">Pole Number</option>
+	  <option value="Security Desk">Security Desk</option>
+	</select>
+		</div>
+		
+		<div class="form-group col-md-6">
+					<label for="stationNumber" class="form-label">Station Number</label>
+	<input type="text" disabled name="stationNumber" class="form-control w-50" placeholder="Optional" id="stationNumber" />
+		
+		
+		</div>
+		
+		
+		</div>
+		
+		
+		
+		
+
+
+			
+
+		
+		
+		<div class="form-row">
+				<div class="form-group col-md-6">
+		 <label for="partNameNeeded" class="form-label">Part Name Needed</label>
+		<select id="partNameNeeded" name="partNameNeeded" class="form-select form-control" multiple class="form-select form-control form-select-lg w-25" aria-label="multiple select example">
+		</select>
+		
+		</div>
+		<div class="form-group col-md-6">
+		  <label for="issue" class="form-label">Issue</label>
+	<select id="issue" name="issue" multiple class="form-select form-control form-select-lg w-50" required>
+	  <option value="brokenPart">Broken Part</option>
+	  <option value="dirtyRoller">Dirty Roller</option>
+	  <option value="dirtyRoller">Calibration Issue</option>
+	  <option value="dirtyRoller">Configuration Issue</option>
+	  <option value="dirtyRoller">Incorrect Printer Paper Inserted</option>
+	  <option value="multipleIssues">Multiple Issues</option>
+	</select>
+		
+		
+		</div>
+		
+		</div>
+		
+		
+
+	
+	<div class="form-row">
+			<div class="form-group col-md-3">
+		  <label for="userId" class="form-label">User ID</label><br />
+		  <select id="userId" name="userId" class="form-select form-control form-select-lg" required>
+		  </select>
+		</div>
+	
+			<div class="form-group col-md-3">
+		  <label for="timeSpent" class="form-label">Minutes Spent On Task</label>
+		<input type="number" id="timeSpent" name="timeSpent" class="form-control" />
+		</div>
+	
+		
+		
+		<div class="form-group col-md-3">
+		  <label for="assistBy" class="form-label">Assisted By (optional)</label>
+		<select id="assistBy" name="assistBy" class="form-select form-control form-select-lg">
+			</select>
+		</div>
+		
+		
+	
+		</div>
+		
+	
+		<div class="form-row">
+			<div class="form-group col-md-9">
+  <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Optional" rows="3"></textarea>
+  </div>
+</div>
+		
+          
+		<button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+      </form>
+ </div>
+</div>
+
+	<script type="text/javascript">
+	
+	
+	window.onload = function() {
+		let printer_types = {{{printer_types}}};
+		const selectPrinterType = document.getElementById("printerType");
+
+		Object.keys(printer_types).forEach(key => {
+		  const value = printer_types[key];
+		  console.log(key, value.printer_type);
+		  let newOption = new Option(value.printer_type, value.printer_type);
+		  selectPrinterType.add(newOption);
+		});
+		
+		let active_users = {{{active_users}}};
+		const selectUserId = document.getElementById("userId");
+		const selectAssistBy = document.getElementById("assistBy");
+		let blankOption = new Option("", "");
+		let blankOption2 = new Option("", "");
+		selectAssistBy.add(blankOption2);
+		Object.keys(active_users).forEach(key => {
+		  const value = active_users[key];
+		  console.log(key, value.userId);
+		  let newOption = new Option(value.user_id, value.user_id);
+		  let newOption1 = new Option(value.user_id, value.user_id);
+		  selectUserId.add(newOption);
+		  selectAssistBy.add(newOption1);
+		});
+		
+		let printer_parts= {{{printer_parts}}};
+		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
+		//selectPrinterPartNeeded.add(blankOption);
+		Object.keys(printer_parts).forEach(key => {
+		  const value = printer_parts[key];
+		  console.log(key, value.printer_part_id);
+		  let newOption = new Option(value.printer_part_name, value.printer_part_id);
+		  selectPrinterPartNeeded.add(newOption);
+		});
+		
+	}
+	
+	
+	
+	function myFunction(e) {
+	if (e.target.value != "IT Cage" && e.target.value != "" && e.target.value != "Security Desk") {
+		document.getElementById('stationNumber').disabled = false;
+	} else {
+		document.getElementById('stationNumber').disabled = true;
+	}
+	console.log(e.target.value);
+	}
+	
+	</script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>
