@@ -59,7 +59,7 @@ app.get('/tester', async (req, res) => {
     message: 'This is a dynamic message.' 
   });*/
    try {
-    let printerTypes = await db.query('SELECT printer_type FROM printer_types');
+    let printerTypes = await db.query('SELECT printer_type_id FROM printer_types');
 	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
 	let printerParts = await db.query('SELECT * FROM printer_parts');
 	res.render('tester', { title: 'Save the Zebras', 
@@ -74,6 +74,10 @@ app.get('/tester', async (req, res) => {
 
 app.get('/contact', (req, res) => {
   res.render('contact', { title: 'Save the Zebras'});
+})
+
+app.get('/success', (req, res) => {
+  res.render('success', { title: 'Save the Zebras'});
 })
 
 app.get('/news', (req, res) => {
@@ -203,10 +207,13 @@ app.post('/submit-repair', async (req, res) => {
 	console.log('gatooor');
 	console.log('gator18: ' + partNameNeeded);
 	let arPartNameNeeded = [];
-	if (Array.isArray(partNameNeeded)) {
-		arPartNameNeeded = partNameNeeded;
-	} else {
-		arPartNameNeeded.push(partNameNeeded);
+	
+	if (partNameNeeded != undefined) {
+		if (Array.isArray(partNameNeeded)) {
+			arPartNameNeeded = partNameNeeded;
+		} else {
+			arPartNameNeeded.push(partNameNeeded);
+		}
 	}
 	
 
@@ -235,14 +242,13 @@ app.post('/submit-new-user', async (req, res) => {
 
   try {
     const response = await db.query(text, values);
-	res.redirect('/');
+	res.redirect('/success');
   } catch (err) {	
 	if (err.detail.includes('already exists.')) {
 		res.status(500).send(`Error: ${userId} already exists.`);
 	}	
     res.status(500).json({ error: 'Internal Server Error' });
   }
-	//res.send(`Form submitted successfully for user: ${userId}`);
 })
 
 

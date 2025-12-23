@@ -64,178 +64,73 @@
   </div>
 </nav>
 <br /><br />
-<div class="container">
-	<h2>Add Printer Repair</h2>
-	<hr />
-      <form action="/submit-repair" method="POST">
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Total Cost Saved</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
 	  
-	  <div class="form-row">
-        <!-- Form elements go here -->
-
-        <div class="form-group col-md-6">
-          <label for="serialNumberId" class="form-label">Serial Number ID</label>
-          <input type="text" class="form-control" id="serialNumberId" placeholder="Serial Number ID" name="serialNumberId" maxlength="22" required />
-        </div>
-		
+        
+		<div class="row">
+			<div class="col">
+				New Printer Cost:
+			</div>
+			<div class="col">
+				+$1402.00
+			</div>
 		</div>
-		<div class="form-row">
-		<div class="form-group col-md-6">
-		    <label for="printerType" class="form-label">Printer Type</label>
-			<select id="printerType" name="printerType" class="form-select form-control form-select-lg" required>
-			</select>	
+		<div class="row">
+			<div class="col">
+				Part 1:
+			</div>
+			<div class="col">
+				-$333.00
+			</div>
 		</div>
-		
+		<div class="row">
+			<div class="col">
+				Part 2:
+			</div>
+			<div class="col">
+				-$35.50
+			</div>
 		</div>
-		
-				<div class="form-row">
-		<div class="form-group col-md-6">
-		    		<label for="printerLocation" class="form-label">Printer Location</label>
-	<select id="printerLocation" name="printerLocation" class="form-select form-control form-select-lg" onchange="myFunction(event)" required>
-	  <option value="IT Cage">IT Cage</option>
-	  <option value="Singles-Mix-Kickout">Singles-Mix-Kickout</option>
-	  <option value="AFE2">AFE2</option>
-	  <option value="AFE1">AFE1</option>
-	  <option value="Jackpot">Jackpot</option>
-	  <option value="Upper Mezz">Upper Mezz</option>
-	  <option value="Pole Number">Pole Number</option>
-	  <option value="Security Desk">Security Desk</option>
-	</select>
-		</div>
-		
-		<div class="form-group col-md-6">
-					<label for="stationNumber" class="form-label">Station Number</label>
-	<input type="text" disabled name="stationNumber" class="form-control w-50" placeholder="Optional" id="stationNumber" />
-		
-		
+		<p>-------</p>
+		<div class="row">
+			<div class="col">
+				Total Saved: 
+			</div>
+			<div class="col">
+				$890.00
+			</div>
 		</div>
 		
 		
-		</div>
-		
-		
-		
-		
-
-
-			
-
-		
-		
-		<div class="form-row">
-				<div class="form-group col-md-6">
-		 <label for="partNameNeeded" class="form-label">Part Name Needed</label>
-		<select id="partNameNeeded" name="partNameNeeded" class="form-select form-control" multiple class="form-select form-control form-select-lg w-25" aria-label="multiple select example">
-		</select>
-		
-		</div>
-		<div class="form-group col-md-6">
-		  <label for="issue" class="form-label">Issue</label>
-	<select id="issue" name="issue" multiple class="form-select form-control form-select-lg w-50" required>
-	  <option value="brokenPart">Broken Part</option>
-	  <option value="dirtyRoller">Dirty Roller</option>
-	  <option value="dirtyRoller">Calibration Issue</option>
-	  <option value="dirtyRoller">Configuration Issue</option>
-	  <option value="dirtyRoller">Incorrect Printer Paper Inserted</option>
-	  <option value="multipleIssues">Multiple Issues</option>
-	</select>
-		
-		
-		</div>
-		
-		</div>
-		
-		
-
-	
-	<div class="form-row">
-			<div class="form-group col-md-3">
-		  <label for="userId" class="form-label">User ID</label><br />
-		  <select id="userId" name="userId" class="form-select form-control form-select-lg" required>
-		  </select>
-		</div>
-	
-			<div class="form-group col-md-3">
-		  <label for="timeSpent" class="form-label">Minutes Spent On Task</label>
-		<input type="number" id="timeSpent" name="timeSpent" class="form-control" />
-		</div>
-	
-		
-		
-		<div class="form-group col-md-3">
-		  <label for="assistBy" class="form-label">Assisted By (optional)</label>
-		<select id="assistBy" name="assistBy" class="form-select form-control form-select-lg">
-			</select>
-		</div>
-		
-		
-	
-		</div>
-		
-	
-		<div class="form-row">
-			<div class="form-group col-md-9">
-  <label for="exampleFormControlTextarea1" class="form-label">Comments</label>
-  <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Optional" rows="3"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
   </div>
 </div>
-		
-          
-		<button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
-      </form>
- </div>
-</div>
 
-	<script type="text/javascript">
-	
-	
-	window.onload = function() {
-		let printer_types = {{{printer_types}}};
-		const selectPrinterType = document.getElementById("printerType");
-
-		Object.keys(printer_types).forEach(key => {
-		  const value = printer_types[key];
-		  console.log(key, value.printer_type);
-		  let newOption = new Option(value.printer_type, value.printer_type);
-		  selectPrinterType.add(newOption);
-		});
-		
-		let active_users = {{{active_users}}};
-		const selectUserId = document.getElementById("userId");
-		const selectAssistBy = document.getElementById("assistBy");
-		let blankOption = new Option("", "");
-		let blankOption2 = new Option("", "");
-		selectAssistBy.add(blankOption2);
-		Object.keys(active_users).forEach(key => {
-		  const value = active_users[key];
-		  console.log(key, value.userId);
-		  let newOption = new Option(value.user_id, value.user_id);
-		  let newOption1 = new Option(value.user_id, value.user_id);
-		  selectUserId.add(newOption);
-		  selectAssistBy.add(newOption1);
-		});
-		
-		let printer_parts= {{{printer_parts}}};
-		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
-		//selectPrinterPartNeeded.add(blankOption);
-		Object.keys(printer_parts).forEach(key => {
-		  const value = printer_parts[key];
-		  console.log(key, value.printer_part_id);
-		  let newOption = new Option(value.printer_part_name, value.printer_part_id);
-		  selectPrinterPartNeeded.add(newOption);
-		});
-		
-	}
-	
-	
-	
-	function myFunction(e) {
-	if (e.target.value != "IT Cage" && e.target.value != "" && e.target.value != "Security Desk") {
-		document.getElementById('stationNumber').disabled = false;
-	} else {
-		document.getElementById('stationNumber').disabled = true;
-	}
-	console.log(e.target.value);
-	}
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+</script>
 	
 	</script>
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
