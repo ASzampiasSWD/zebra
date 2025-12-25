@@ -26,16 +26,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Define a route to render a view
 app.get('/', async (req, res) => {
-  // Renders the 'home.handlebars' file found in the 'views' folder
-  /*res.render('index', { 
-    title: 'Save the Zebras', 
-    message: 'This is a dynamic message.' 
-  });*/
    try {
     let printerTypes = await db.query('SELECT printer_type_id, printer_type_name, current_cost FROM printer_types');
 	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
-	let printerParts = await db.query('SELECT * FROM printer_parts');
-	let issues = await db.query('SELECT * FROM issues');
+	let printerParts = await db.query('SELECT * FROM printer_parts ORDER BY popularity_score');
+	let issues = await db.query('SELECT * FROM issues ORDER BY popularity_score');
 	res.render('index', { title: 'Save the Zebras', 
 						  printer_types: JSON.stringify(printerTypes.rows),
 						  active_users: JSON.stringify(activeUsers.rows),
@@ -80,6 +75,10 @@ app.get('/success', (req, res) => {
   res.render('success', { title: 'Save the Zebras'});
 })
 
+app.get('/error', (req, res) => {
+  res.render('error', { title: 'Save the Zebras'});
+})
+
 app.get('/news', (req, res) => {
   res.render('news', { title: 'Save the Zebras'});
 });
@@ -87,7 +86,7 @@ app.get('/news', (req, res) => {
 app.get('/list', async (req, res) => {
   //res.render('list', {});
     try {
-    const { rows } = await db.query('SELECT repair_id, serial_number_id, printer_type_name, user_id, printer_location, station_number, money_saved, date_time_fixed FROM repairs INNER JOIN printer_types ON repairs.printer_type_id = printer_types.printer_type_id');
+    const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id');
 	//await db.query('SELECT * FROM repairs');
 	console.log(JSON.stringify(rows));
 	res.render('list', { title: 'Save the Zebras', rows: JSON.stringify(rows) });
@@ -170,8 +169,8 @@ app.post('/submit-repair', async (req, res) => {
   }
   
 
-	const text4 = 'INSERT INTO repairs(serial_number_id, printer_type_id, user_id, assist_id, printer_location, station_number, time_worked_on, comments, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *'; // Parameterized query
-	const values4 = [serialNumberId, printerType, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, money_saved]; // Array of values to substitute
+	const text4 = 'INSERT INTO repairs(serial_number_id, user_id, assist_id, printer_location, station_number, time_worked_on, comments, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *'; // Parameterized query
+	const values4 = [serialNumberId, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, money_saved]; // Array of values to substitute
 	//printer_part_id needed
 	//issue needed
 	try {
@@ -245,7 +244,8 @@ app.post('/submit-new-user', async (req, res) => {
 	res.redirect('/success');
   } catch (err) {	
 	if (err.detail.includes('already exists.')) {
-		res.status(500).send(`Error: ${userId} already exists.`);
+		//res.status(500).send(`Error: ${userId} already exists.`);
+		res.redirect('/error');
 	}	
     res.status(500).json({ error: 'Internal Server Error' });
   }

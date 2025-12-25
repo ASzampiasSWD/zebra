@@ -9,38 +9,18 @@
     <link rel="stylesheet" href="./style.css" />-->
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
 	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	
-		<style>
+	<style>
 		
 		body {
       background-image: linear-gradient(120deg, 
                                       #9de7fa 0%, 
 									  #A7BFE8 100%);
                                     /*#f89fba 100%);*
-	 /* background-color: #def;*/
       color: black;
       font-family: "Poppins", sans-serif;
      min-height: 100vh;
 }
-
-/*.btn-primary {
-      color: #fff;
-      background-color: #f89fba;
-      border-color: #f89fba;
-}*/
-.containerFormSubmittedMessage {
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-      justify-content: center;
-      align-items: center;
-      height: 200px;
-      border: 3px solid whitesmoke;
-}
-		
-		
-		
-		</style>
+</style>
 </head>
 <body>
 {{{body}}}
@@ -176,49 +156,13 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Total Cost Saved</h5>
+        <h5 class="modal-title" id="exampleModalLongTitle">Cost Savings</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" id="modalBody">
-	  
-        
-		<!--<div class="row">
-			<div class="col">
-				New Printer Cost:
-			</div>
-			<div class="col">
-				+$1402.00
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				Part 1:
-			</div>
-			<div class="col">
-				-$333.00
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				Part 2:
-			</div>
-			<div class="col">
-				-$35.50
-			</div>
-		</div>
-		<p>-------</p>
-		<div class="row">
-			<div class="col">
-				Total Saved: 
-			</div>
-			<div class="col">
-				$890.00
-			</div>
-		</div>-->
-		
-		
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -228,33 +172,13 @@
   </div>
 </div>
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
       </form>
  </div>
 </div>
-
-
-
-
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-
 
 	<script type="text/javascript">
 	
@@ -285,8 +209,6 @@
 		  selectIssues.add(newOption);
 		});
 		
-		
-		
 		let active_users = {{{active_users}}};
 		const selectUserId = document.getElementById("userId");
 		const selectAssistBy = document.getElementById("assistBy");
@@ -295,7 +217,6 @@
 		selectAssistBy.add(blankOption2);
 		Object.keys(active_users).forEach(key => {
 		  const value = active_users[key];
-		  console.log(key, value.userId);
 		  let newOption = new Option(value.user_id, value.user_id);
 		  let newOption1 = new Option(value.user_id, value.user_id);
 		  selectUserId.add(newOption);
@@ -307,7 +228,6 @@
 		//selectPrinterPartNeeded.add(blankOption);
 		Object.keys(printer_parts).forEach(key => {
 		  const value = printer_parts[key];
-		  console.log(key, value.printer_part_id);
 		  let newOption = new Option(value.printer_part_name, value.printer_part_id);
 		  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
 		  mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
@@ -319,58 +239,32 @@
 	function recordPrinterType(e) {
 		printerOption = e.target.value;
 	}
-	
-	
+		
 	function myFunction(e) {
-	if (e.target.value != "IT Cage" && e.target.value != "" && e.target.value != "Security Desk") {
-		document.getElementById('stationNumber').disabled = false;
-	} else {
-		document.getElementById('stationNumber').disabled = true;
+		if (e.target.value != "IT Cage" && e.target.value != "" && e.target.value != "Security Desk") {
+			document.getElementById('stationNumber').disabled = false;
+		} else {
+			document.getElementById('stationNumber').disabled = true;
+		}
 	}
-	console.log(e.target.value);
-	}
+
 	
-	function clickButton() {
-	  /*let printer_types = {{{printer_types}}};
-	  let printer_parts = {{{printer_parts}}};
-	  let printerParts = $('#partNameNeeded').val();
-
-
-	  let totalPrinterCost = Number(printer_types[printerOption].current_cost);
-	  alert('New Printer Cost: ' + totalPrinterCost);
-	  let totalPrinterPartCost = 0;
-	  //alert(printerParts.length);
-	  for (let f = 0; f < printerParts.length; f++) {
-		  alert('PART ID: ' + printerParts[f] + ' with cost: ' + mapPrinterPartCostById.get(printerParts[f]));
-		  totalPrinterPartCost += Number(mapPrinterPartCostById.get(printerParts[f]));
-	  }
-	 let totalValueSaved = totalPrinterCost - totalPrinterPartCost;
-	 alert(totalValueSaved.toFixed(2));
-	 document.getElementById("money_saved").value = totalValueSaved.toFixed(2)*/
-
-	}
-	
-		$(document).ready(function () {
+	$(document).ready(function () {
     $('#modalCalculate').on('shown.bs.modal', function (e) {
-        // Your code to run when the modal has fully popped up
-        console.log('Modal is now completely visible. Running specific code...');
-		console.log('Printer OPTION: ' + printerOption);
 		let newPrinterOption = printerOption - 1;
-        // Example: Focus on an input field inside the modal
 		let printer_types = {{{printer_types}}};
 		let totalPrinterName = printer_types[newPrinterOption].printer_type_name;
         let totalPrinterCost = Number(printer_types[newPrinterOption].current_cost);
 		let totalPrinterPartCost = 0;
 		let newInnerHTML = "";
+		
 		let modalBody = document.getElementById("modalBody");
 		newInnerHTML += "<div class='row'><div class='col'>" + totalPrinterName + "</div><div class='col'>+$" + totalPrinterCost.toFixed(2) + "</div></div>";
-		
-		
+				
 		let printer_parts = {{{printer_parts}}};
 		let printerParts = $('#partNameNeeded').val();
 		
 		 for (let m = 0; m < printerParts.length; m++) {
-		 // alert('PART IDDDD: ' + printerParts[m] + ' with name ' + mapPrinterPartNameById.get(printerParts[m]) + ' with cost: ' + mapPrinterPartCostById.get(printerParts[m]));
 		  totalPrinterPartCost += Number(mapPrinterPartCostById.get(printerParts[m]));
 		  newInnerHTML += "<div class='row'><div class='col'>" + mapPrinterPartNameById.get(printerParts[m]) + "</div><div class='col'>-$" + mapPrinterPartCostById.get(printerParts[m]) + "</div></div>";
 		}
@@ -379,18 +273,9 @@
 		newInnerHTML += "<div class='row'><div class='col'>Total Value Saved</div><div class='col'>$" + totalValueSaved.toFixed(2) + "</div>";
 		document.getElementById("money_saved").value = totalValueSaved.toFixed(2);
 		modalBody.innerHTML = newInnerHTML;
-		
-	
-		
-		
     });
 });
 	
-	
 	</script>
-
-
-
-
 </body>
 </html>
