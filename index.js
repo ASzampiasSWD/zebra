@@ -151,8 +151,8 @@ app.post('/submit-repair', async (req, res) => {
   }
   let repair_id = null;
   if (printerExists == false) {
-		const insertIntoPrinters = 'INSERT INTO printers(serial_number_id, printer_type_id, times_worked_on) VALUES($1, $2, $3) RETURNING *';
-		const insertIntoPrintersValues = [serialNumberId, printerType, 1];
+		const insertIntoPrinters = 'INSERT INTO printers(serial_number_id, printer_type_id) VALUES($1, $2) RETURNING *';
+		const insertIntoPrintersValues = [serialNumberId, printerType];
 		try {
 			const response3 = await db.query(insertIntoPrinters, insertIntoPrintersValues);
 		} catch (err) {
