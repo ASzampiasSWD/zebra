@@ -76,7 +76,16 @@ app.get('/success', (req, res) => {
 })
 
 app.get('/error', (req, res) => {
-  res.render('error', { title: 'Save the Zebras'});
+  let passedVariable = req.query.username;
+  let strMessage = 'User ' +  passedVariable + ' already exists';
+  res.render('error', { title: 'Save the Zebras',
+						errMessage: strMessage});
+})
+
+app.get('/printer', (req, res) => {
+  let passedVariable = req.query.id;
+  res.render('printer', { title: 'Save the Zebras',
+						serial_number_id: req.query.id});
 })
 
 app.get('/news', (req, res) => {
@@ -84,10 +93,8 @@ app.get('/news', (req, res) => {
 });
 
 app.get('/list', async (req, res) => {
-  //res.render('list', {});
     try {
-    const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id');
-	//await db.query('SELECT * FROM repairs');
+    const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id ORDER BY repair_id');
 	console.log(JSON.stringify(rows));
 	res.render('list', { title: 'Save the Zebras', rows: JSON.stringify(rows) });
   } catch (err) {
@@ -97,11 +104,8 @@ app.get('/list', async (req, res) => {
 });
 
 app.get('/join', async (req, res) => {
-  //res.render('list', {});
     try {
     const { rows } = await db.query('SELECT org_id FROM organizations');
-    //res.status(200).json(rows);
-	console.log(JSON.stringify(rows));
 	res.render('join', { title: 'Save the Zebras', rows: JSON.stringify(rows) });
   } catch (err) {
     console.error(err);
@@ -124,16 +128,6 @@ app.get('/users', async (req, res) => {
 app.post('/submit-repair', async (req, res) => {
   let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, money_saved } = req.body;
 
-  console.log('serialNumberId:', serialNumberId);
-  console.log('userId:', userId);
-  console.log('printerType:', printerType);
-  console.log('printerLocation:', printerLocation);
-  console.log('stationNumber:', stationNumber);
-  console.log('issue', issue);
-  console.log('timeSpentOnTask', timeSpentOnTask);
-  console.log('comments', comments);
-   console.log('moneySaved', money_saved);
-  
   if (assistBy == "") {
 	assistBy = null;
   }
@@ -143,13 +137,12 @@ app.post('/submit-repair', async (req, res) => {
   if (partNameNeeded == "") {
 	partNameNeeded = null;
   }
-  
-  
-  const text1 = 'SELECT * FROM printers WHERE serial_number_id = $1';
-  const values = [serialNumberId];
+    
+  const queryPrinterBySerialNumberId = 'SELECT * FROM printers WHERE serial_number_id = $1';
+  const queryPrinterBySerialNumberIdValues = [serialNumberId];
   let printerExists = true;
-    try {
-    const response = await db.query(text1, values);
+  try {
+    const response = await db.query(queryPrinterBySerialNumberId, queryPrinterBySerialNumberIdValues);
 	if (response.rows.length == 0) {
 		printerExists = false;
 	}
@@ -158,23 +151,21 @@ app.post('/submit-repair', async (req, res) => {
   }
   let repair_id = null;
   if (printerExists == false) {
-		const text3 = 'INSERT INTO printers(serial_number_id, printer_type_id, times_worked_on) VALUES($1, $2, $3) RETURNING *';
-		const values2 = [serialNumberId, printerType, 1]; // Array of values to substitute
+		const insertIntoPrinters = 'INSERT INTO printers(serial_number_id, printer_type_id, times_worked_on) VALUES($1, $2, $3) RETURNING *';
+		const insertIntoPrintersValues = [serialNumberId, printerType, 1];
 		try {
-			const response3 = await db.query(text3, values2);
+			const response3 = await db.query(insertIntoPrinters, insertIntoPrintersValues);
 		} catch (err) {
 			console.log(err);
 			res.send(err);
 		}
   }
   
+	const insertIntoRepairs = 'INSERT INTO repairs(serial_number_id, user_id, assist_id, printer_location, station_number, time_worked_on, comments, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+	const insertIntoRepairsValues = [serialNumberId, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, money_saved];
 
-	const text4 = 'INSERT INTO repairs(serial_number_id, user_id, assist_id, printer_location, station_number, time_worked_on, comments, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *'; // Parameterized query
-	const values4 = [serialNumberId, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, money_saved]; // Array of values to substitute
-	//printer_part_id needed
-	//issue needed
 	try {
-	const response4 = await db.query(text4, values4);
+	const response4 = await db.query(insertIntoRepairs, insertIntoRepairsValues);
 	repair_id = response4.rows[0].repair_id;
 	} catch (err) {
 		console.log(err);
@@ -190,23 +181,17 @@ app.post('/submit-repair', async (req, res) => {
 	
 
 	for (let i = 0; i < arIssues.length; i++) {
-		const text5 = 'INSERT INTO issues_resolved_on_repair(repair_id, issue_id) VALUES($1, $2) RETURNING *'; // Parameterized query
-		const values5 = [repair_id, arIssues[i]]; // Array of values to substitute
-		//printer_part_id needed
-		//issue needed
+		const insertIntoIssuesResolved = 'INSERT INTO issues_resolved_on_repair(repair_id, issue_id) VALUES($1, $2) RETURNING *';
+		const insertIntoIssuesResolvedValues = [repair_id, arIssues[i]];
 		try {
-		const response5 = await db.query(text5, values5);
-		//console.log(response5);
-		//res.send(response5);
+		const response5 = await db.query(insertIntoIssuesResolved, insertIntoIssuesResolvedValues );
 		} catch (err) {
 			console.log(err);
 			res.send(err);
 		}
 	}
-	console.log('gatooor');
-	console.log('gator18: ' + partNameNeeded);
-	let arPartNameNeeded = [];
 	
+	let arPartNameNeeded = [];	
 	if (partNameNeeded != undefined) {
 		if (Array.isArray(partNameNeeded)) {
 			arPartNameNeeded = partNameNeeded;
@@ -215,19 +200,17 @@ app.post('/submit-repair', async (req, res) => {
 		}
 	}
 	
-
 	for (let d = 0; d < arPartNameNeeded.length; d++) {
-		let text6 = 'INSERT INTO printer_parts_used_for_repair(repair_id, printer_part_id) VALUES($1, $2) RETURNING *'; // Parameterized query
-		let values6 = [repair_id, arPartNameNeeded[d]];
+		let insertIntoPrinterPartsUsed = 'INSERT INTO printer_parts_used_for_repair(repair_id, printer_part_id) VALUES($1, $2) RETURNING *'; // Parameterized query
+		let insertIntoPrinterPartsUsedValues = [repair_id, arPartNameNeeded[d]];
 		try {
-			let response6 = await db.query(text6, values6);
+			let response6 = await db.query(insertIntoPrinterPartsUsed, insertIntoPrinterPartsUsedValues);
 		} catch (err) {
 			console.log(err);
 			res.send(err);
 		}
 	}
-	res.redirect('/list');
-	
+	res.redirect('/list');	
 });
 
 app.post('/submit-new-user', async (req, res) => {
@@ -241,13 +224,17 @@ app.post('/submit-new-user', async (req, res) => {
 
   try {
     const response = await db.query(text, values);
+	console.log('we in here?');
 	res.redirect('/success');
   } catch (err) {	
 	if (err.detail.includes('already exists.')) {
 		//res.status(500).send(`Error: ${userId} already exists.`);
-		res.redirect('/error');
+		console.log('errror Katy');
+		let linky = '/error?username=' + userId;
+		console.log(linky);
+		res.redirect(linky);
 	}	
-    res.status(500).json({ error: 'Internal Server Error' });
+    //res.status(500).json({ error: 'Internal Server Error' });
   }
 })
 

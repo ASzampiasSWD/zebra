@@ -32,8 +32,6 @@ CREATE TABLE printers(
  warranty_end_date date DEFAULT NULL,
  is_active boolean DEFAULT true,
  decommissioned_date date DEFAULT NULL,
- times_worked_on integer DEFAULT 0,
- money_spent_on_repairs numeric(10, 2) DEFAULT 0.00,
  created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );
 

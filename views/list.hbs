@@ -9,38 +9,18 @@
     <link rel="stylesheet" href="./style.css" />-->
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
 	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	
-		<style>
-		
-		body {
-      background-image: linear-gradient(120deg, 
-                                      #9de7fa 0%, 
-									  #A7BFE8 100%);
-                                    /*#f89fba 100%);*/
-	  /*background-color: #def;*/
-      color: black;
-      font-family: "Poppins", sans-serif;
-     min-height: 100vh;
+	 <link rel="stylesheet" type="text/css" href="styles/index.css" />
+	 <style>
+	 
+
+.table-bordered th,
+.table-bordered td {
+  border-color: #88a7d9 !important; /* Use your desired HEX or color name */
 }
 
-/*.btn-primary {
-      color: #fff;
-      background-color: #f89fba;
-      border-color: #f89fba;
-}*/
-.containerFormSubmittedMessage {
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-      justify-content: center;
-      align-items: center;
-      height: 200px;
-      border: 3px solid whitesmoke;
-}
-		
-		
-		
-		</style>
+	 
+	 
+	 </style>
 </head>
 <body>
 {{{body}}}
@@ -68,22 +48,33 @@
 <br /><br />
 <div class="w-75 justify-content-center" style="margin: 0 auto;">
 
-<h2>Repairs</h2><input class="form-control w-25" type="text" placeholder="Search by User ID..." />
+<div class="row">
+<div class="col">
+<h2>Repairs</h2>
+</div>
+<div class="col">
+</div>
+<div class="col">
+</div>
+<div class="col">
+<input class="form-control align-right" type="text" placeholder="Search by User ID..." />
+</div>
+</div>
 <hr />
 <table class="table table-bordered" id="repairTable">
   <thead>
-    <tr class="text-center">
+    <tr>
       <th scope="col">Repair ID</th>
       <th scope="col">Serial Number</th>
       <th scope="col">Printer Type</th>
       <th scope="col">User ID</th>
 	  <th scope="col">Location</th>
 	  <th scope="col">Station ID</th>
-	   <th scope="col">Money Saved</th>
+	  <th scope="col">Money Saved</th>
 	  <th scope="col">Date/Time Fixed</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="repairTBody">
   </tbody>
 </table>
 </div>
@@ -99,7 +90,7 @@
 
 <script>
 window.onload = function() {
-  let tableBody = document.getElementById("repairTable");
+  let tableBody = document.getElementById("repairTBody");
   // Create an HTML string for the new row
   let rows = {{{rows}}};
   console.log(rows);
