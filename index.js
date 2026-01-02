@@ -42,55 +42,95 @@ app.get('/', async (req, res) => {
   }
 })
 
-app.get('/about', (req, res) => {
-  res.render('about', { title: 'Save the Zebras'});
-})
-
-app.get('/tester', async (req, res) => {
- // res.render('tester', { title: 'Save the Zebras'});
-   // Renders the 'home.handlebars' file found in the 'views' folder
-  /*res.render('index', { 
-    title: 'Save the Zebras', 
-    message: 'This is a dynamic message.' 
-  });*/
-   try {
-    let printerTypes = await db.query('SELECT printer_type_id FROM printer_types');
-	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
-	let printerParts = await db.query('SELECT * FROM printer_parts');
-	res.render('tester', { title: 'Save the Zebras', 
-						  printer_types: JSON.stringify(printerTypes.rows),
-						  active_users: JSON.stringify(activeUsers.rows),
-						  printer_parts: JSON.stringify(printerParts.rows) });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-})
-
-app.get('/contact', (req, res) => {
-  res.render('contact', { title: 'Save the Zebras'});
-})
-
 app.get('/success', (req, res) => {
   res.render('success', { title: 'Save the Zebras'});
 })
 
 app.get('/error', (req, res) => {
   let passedVariable = req.query.username;
-  let strMessage = 'User ' +  passedVariable + ' already exists';
+  let printerVariable = req.query.printer;
+  let strMessage = '';
+  let url = '/list';
+  
+  if (passedVariable != undefined) {
+	strMessage = 'User ' +  passedVariable + ' already exists';
+	url = '/join';
+  }
+  if (passedVariable == 'DNE') {
+	strMessage = 'User Does Not Exist';
+	url = '/join';
+  }
+  if (printerVariable != undefined) {
+	strMessage = 'Printer Does Not Exist';
+	url = '/list';
+  }
+ 
   res.render('error', { title: 'Save the Zebras',
-						errMessage: strMessage});
+						errMessage: strMessage,
+						url : url});
 })
 
-app.get('/printer', (req, res) => {
-  let passedVariable = req.query.id;
+async function getAssistNumbers(userId) {
+   try {
+	const queryAssistsByUserId = 'SELECT COUNT(serial_number_id) FROM repairs WHERE assist_id = $1';
+	const queryAssistsByUserIdValues = [userId];
+    const { rows } = await db.query(queryAssistsByUserId, queryAssistsByUserIdValues);
+	return rows[0].count;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+}
+
+/*async function getPrinterTypeCost(serialNumber) {
+   try {
+	const queryAssistsByUserId = 'SELECT COUNT(serial_number_id) FROM repairs WHERE assist_id = $1';
+	const queryAssistsByUserIdValues = [userId];
+    const { rows } = await db.query(queryAssistsByUserId, queryAssistsByUserIdValues);
+	return rows[0].count;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+}*/
+
+app.get('/user', async (req, res) => {
+  let passedVariable = req.query.username;
+  let assistNumber = await getAssistNumbers(passedVariable);
+  try {
+	const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
+	const queryPrintersByUserIdValues = [passedVariable];
+    const { rows } = await db.query(queryPrintersByUserId, queryPrintersByUserIdValues);
+	console.log(JSON.stringify(rows));
+	if (rows.length == 0) {
+		console.log('say something');
+		res.redirect('/error?username=DNE');
+	}
+	res.render('user', { title: 'Save the Zebras', rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+})
+
+app.get('/printer', async (req, res) => {
+  let passedVariable = req.query.serial;
+  const queryRepairsBySerialNumberId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, comments, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE repairs.serial_number_id = $1 ORDER BY repair_id';
+  const queryRepairsBySerialNumberIdValues = [passedVariable];
+  try {
+  const { rows } = await db.query(queryRepairsBySerialNumberId, queryRepairsBySerialNumberIdValues);
+	if (rows.length == 0) {
+		console.log('say something');
+		res.redirect('/error?printer=DNE');
+	}
   res.render('printer', { title: 'Save the Zebras',
-						serial_number_id: req.query.id});
+						  rows: JSON.stringify(rows)});
+  } catch (err) {
+	  console.error(err);
+	  res.status(500).send('Server Error');
+	  
+  }
 })
-
-app.get('/news', (req, res) => {
-  res.render('news', { title: 'Save the Zebras'});
-});
 
 app.get('/list', async (req, res) => {
     try {
@@ -113,18 +153,6 @@ app.get('/join', async (req, res) => {
   }
 });
 
-// Example route to get all users
-app.get('/users', async (req, res) => {
-  try {
-    const { rows } = await db.query('SELECT * FROM organizations ORDER BY org_id ASC');
-    res.status(200).json(rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server Error');
-  }
-});
-
-// Define the POST route to handle form submission
 app.post('/submit-repair', async (req, res) => {
   let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, money_saved } = req.body;
 
@@ -224,7 +252,6 @@ app.post('/submit-new-user', async (req, res) => {
 
   try {
     const response = await db.query(text, values);
-	console.log('we in here?');
 	res.redirect('/success');
   } catch (err) {	
 	if (err.detail.includes('already exists.')) {
@@ -234,7 +261,6 @@ app.post('/submit-new-user', async (req, res) => {
 		console.log(linky);
 		res.redirect(linky);
 	}	
-    //res.status(500).json({ error: 'Internal Server Error' });
   }
 })
 

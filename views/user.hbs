@@ -3,20 +3,26 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
     <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./style.css" />-->
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
 	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	 <link rel="stylesheet" type="text/css" href="styles/index.css" />
 	 <style>
-		.table-bordered th,
-		.table-bordered td {
-		  border-color: #88a7d9 !important; /* Use your desired HEX or color name */
-		}	 	 
+	 
+
+.table-bordered th,
+.table-bordered td {
+  border-color: #88a7d9 !important; /* Use your desired HEX or color name */
+}
+
+	 
+	 
 	 </style>
 </head>
 <body>
-{{{body}}}
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="">Zebra Printers</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,17 +45,10 @@
 
 <br /><br />
 <div class="w-75 justify-content-center" style="margin: 0 auto;">
-
+{{{body}}}
 <div class="row">
 <div class="col">
-<h2>Repairs</h2>
-</div>
-<div class="col">
-</div>
-<div class="col">
-</div>
-<div class="col">
-<input class="form-control align-right" type="text" id="searchBar" placeholder="Search by User ID..." />
+<h2>Printers Repaired by User: {{{userId}}}</h2>
 </div>
 </div>
 <hr />
@@ -69,65 +68,79 @@
   <tbody id="repairTBody">
   </tbody>
 </table>
+
+<table class="table table-bordered w-50">
+	<tr>
+		<th colspan="2" class="text-center">Stats</th>
+	</tr>
+	<tr>
+		<td class="col-2">Total Assists</td>
+		<td class="col-2" id="totalAssists">{{{assistNumber}}}</td>
+	</tr>
+	<tr>
+		<td class="col-2">Total Repairs</td>
+		<td class="col-2" id="totalRepairs"></td>
+	</tr>
+	<tr>
+		<td class="col-2">Total Money Saved</td>
+		<td class="col-2" id="totalMoney"></td>
+	</tr>
+</table>
+
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<br /><br />
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script type="text/javascript" src="scripts/sharedUtils.js"></script>
 <script>
 
-function handleInput(event) {
-    const inputValue = event.target.value;
-	changeTableContents(inputValue);
-}
-const inputElement = document.getElementById('searchBar');
-inputElement.addEventListener('input', handleInput);
-
 window.onload = function() {
-  changeTableContents("");
-}
-
-function changeTableContents(strUserId) {
   let tableBody = document.getElementById("repairTBody");
   // Create an HTML string for the new row
   let rows = {{{rows}}};
-  tableBody.innerHTML = "";
-  let bFound = false;
+  let totalMoneySaved = 0;
+  console.log(rows);
+  document.getElementById('totalRepairs').innerHTML = rows.length;
+
 Object.keys(rows).forEach(key => {
   const value = rows[key];
-  if (value.user_id.includes(strUserId)) {
-	  // Insert a new row at the end of the tbody (-1 index means the last position)
-	  let newRow = tableBody.insertRow(-1);
-	  bFound = true;
-	  // Insert new cells into the row in the correct order (index starts at 0)
-	  let cell1 = newRow.insertCell(0);
-	  let cell2 = newRow.insertCell(1);
-	  let cell3 = newRow.insertCell(2);
-	  let cell4 = newRow.insertCell(3);
-	  let cell5 = newRow.insertCell(4);
-	  let cell6 = newRow.insertCell(5);
-	  let cell7 = newRow.insertCell(6);
-	  let cell8 = newRow.insertCell(7);
 
-	  // Add data to the cells
-	  cell1.innerHTML = value.repair_id;
-	  cell2.innerHTML = '<a href="/printer?serial=' + value.serial_number_id + '">' + value.serial_number_id + '</a>';
-	  cell3.innerHTML = value.printer_type_name;
-	  cell4.innerHTML = '<a href="/user?username=' + value.user_id + '">' + value.user_id + '</a>';
-	  cell5.innerHTML = value.printer_location;
-	  cell6.innerHTML = value.station_number;
-	  cell7.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
-	  cell8.innerHTML = transformDate(value.date_time_fixed); 
-	  }
+  // Insert a new row at the end of the tbody (-1 index means the last position)
+  let newRow = tableBody.insertRow(-1);
+
+  // Insert new cells into the row in the correct order (index starts at 0)
+  let cell1 = newRow.insertCell(0);
+  let cell2 = newRow.insertCell(1);
+  let cell3 = newRow.insertCell(2);
+  let cell4 = newRow.insertCell(3);
+  let cell5 = newRow.insertCell(4);
+  let cell6 = newRow.insertCell(5);
+  let cell7 = newRow.insertCell(6);
+  let cell8 = newRow.insertCell(7);
+
+  // Add data to the cells
+  cell1.innerHTML = value.repair_id;
+  cell2.innerHTML = value.serial_number_id;
+  cell3.innerHTML = value.printer_type_name;
+  cell4.innerHTML = value.user_id;
+  cell5.innerHTML = value.printer_location;
+  cell6.innerHTML = value.station_number;
+  cell7.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
+  cell8.innerHTML = transformDate(value.date_time_fixed);
+  totalMoneySaved += parseFloat(value.money_saved);
+
+  // Insert the HTML string immediately before the end of the tbody (effectively adding to the end)
+  //tableBody.insertAdjacentHTML('beforeend', newRow);
+  
   });
-  if (bFound == false) {
-		 let newRow = tableBody.insertRow(-1);
-		 let cell1 = newRow.insertCell(0);
-		 cell1.innerHTML = 'No contents were found';
-		 cell1.colSpan = 8;
-		 cell1.style.textAlign = 'center';
-  }
+  document.getElementById('totalMoney').innerHTML = '$' + usMoneyFormatter.format(totalMoneySaved);
 }
+
 </script>
+
+
 </body>
 </html>
