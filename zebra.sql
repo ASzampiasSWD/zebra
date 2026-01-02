@@ -60,6 +60,7 @@ CREATE TABLE repairs(
  station_number varchar(50) NULL, 
  time_worked_on integer NOT NULL,
  comments varchar(100),
+ repair_cost numeric(10, 2) DEFAULT 0.00,
  money_saved numeric(10, 2) DEFAULT 0.00, 
  date_time_fixed timestamp with time zone DEFAULT CURRENT_TIMESTAMP
 );

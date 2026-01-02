@@ -61,6 +61,7 @@
       <th scope="col">User ID</th>
 	  <th scope="col">Location</th>
 	  <th scope="col">Station ID</th>
+	  <th scope="col">Repair Cost</th>
 	  <th scope="col">Money Saved</th>
 	  <th scope="col">Date/Time Fixed</th>
     </tr>
@@ -120,6 +121,7 @@ Object.keys(rows).forEach(key => {
   let cell6 = newRow.insertCell(5);
   let cell7 = newRow.insertCell(6);
   let cell8 = newRow.insertCell(7);
+  let cell9 = newRow.insertCell(8);
 
   // Add data to the cells
   cell1.innerHTML = value.repair_id;
@@ -128,8 +130,9 @@ Object.keys(rows).forEach(key => {
   cell4.innerHTML = value.user_id;
   cell5.innerHTML = value.printer_location;
   cell6.innerHTML = value.station_number;
-  cell7.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
-  cell8.innerHTML = transformDate(value.date_time_fixed);
+  cell7.innerHTML = '$' + usMoneyFormatter.format(value.repair_cost);
+  cell8.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
+  cell9.innerHTML = transformDate(value.date_time_fixed);
   totalMoneySaved += parseFloat(value.money_saved);
 
   // Insert the HTML string immediately before the end of the tbody (effectively adding to the end)

@@ -82,6 +82,32 @@ async function getAssistNumbers(userId) {
   }
 }
 
+async function getIssuesBySerialNumber(serialNumberId) {
+	try {
+		const queryIssuesBySerialNumberId = 'SELECT repairs.repair_id, issues.issue_id, issues.issue_description, repairs.user_id, repairs.serial_number_id FROM issues_resolved_on_repair INNER JOIN repairs ON issues_resolved_on_repair.repair_id=repairs.repair_id INNER JOIN issues ON issues_resolved_on_repair.issue_id=issues.issue_id WHERE repairs.serial_number_id=$1';
+		const queryIssuesBySerialNumberIdValues = [serialNumberId];
+		const { rows } = await db.query(queryIssuesBySerialNumberId, queryIssuesBySerialNumberIdValues);
+		return rows;
+	} catch (err) {
+    console.error(err);
+    return err;
+  }	
+}
+
+async function getPartNamesBySerialNumber(serialNumberId) {
+	try {
+		const queryPartNamesBySerialNumberId = 'SELECT repairs.repair_id, printer_parts.printer_part_id, printer_parts.printer_part_name, printer_parts.current_cost FROM printer_parts_used_for_repair INNER JOIN repairs ON repairs.repair_id=printer_parts_used_for_repair.repair_id INNER JOIN printer_parts ON printer_parts.printer_part_id=printer_parts_used_for_repair.printer_part_id WHERE repairs.serial_number_id=$1';
+		const queryPartNamesBySerialNumberIdValues = [serialNumberId];
+		const { rows } = await db.query(queryPartNamesBySerialNumberId, queryPartNamesBySerialNumberIdValues);
+		return rows;
+	} catch (err) {
+    console.error(err);
+    return err;
+  }	
+}
+
+
+
 /*async function getPrinterTypeCost(serialNumber) {
    try {
 	const queryAssistsByUserId = 'SELECT COUNT(serial_number_id) FROM repairs WHERE assist_id = $1';
@@ -98,7 +124,7 @@ app.get('/user', async (req, res) => {
   let passedVariable = req.query.username;
   let assistNumber = await getAssistNumbers(passedVariable);
   try {
-	const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
+	const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
 	const queryPrintersByUserIdValues = [passedVariable];
     const { rows } = await db.query(queryPrintersByUserId, queryPrintersByUserIdValues);
 	console.log(JSON.stringify(rows));
@@ -115,16 +141,21 @@ app.get('/user', async (req, res) => {
 
 app.get('/printer', async (req, res) => {
   let passedVariable = req.query.serial;
-  const queryRepairsBySerialNumberId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, comments, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE repairs.serial_number_id = $1 ORDER BY repair_id';
+  const queryRepairsBySerialNumberId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, comments, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE repairs.serial_number_id = $1 ORDER BY repair_id';
   const queryRepairsBySerialNumberIdValues = [passedVariable];
   try {
   const { rows } = await db.query(queryRepairsBySerialNumberId, queryRepairsBySerialNumberIdValues);
+  let issueRows = await getIssuesBySerialNumber(passedVariable);
+  let partNameRows = await getPartNamesBySerialNumber(passedVariable);
+  console.log(issueRows);
 	if (rows.length == 0) {
 		console.log('say something');
 		res.redirect('/error?printer=DNE');
 	}
   res.render('printer', { title: 'Save the Zebras',
-						  rows: JSON.stringify(rows)});
+						  rows: JSON.stringify(rows),
+						  issueRows : JSON.stringify(issueRows),
+						  partNameRows : JSON.stringify(partNameRows) });
   } catch (err) {
 	  console.error(err);
 	  res.status(500).send('Server Error');
@@ -134,7 +165,7 @@ app.get('/printer', async (req, res) => {
 
 app.get('/list', async (req, res) => {
     try {
-    const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id ORDER BY repair_id');
+    const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id ORDER BY repair_id');
 	console.log(JSON.stringify(rows));
 	res.render('list', { title: 'Save the Zebras', rows: JSON.stringify(rows) });
   } catch (err) {
@@ -154,7 +185,7 @@ app.get('/join', async (req, res) => {
 });
 
 app.post('/submit-repair', async (req, res) => {
-  let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, money_saved } = req.body;
+  let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, repair_cost, money_saved } = req.body;
 
   if (assistBy == "") {
 	assistBy = null;
@@ -189,8 +220,8 @@ app.post('/submit-repair', async (req, res) => {
 		}
   }
   
-	const insertIntoRepairs = 'INSERT INTO repairs(serial_number_id, user_id, assist_id, printer_location, station_number, time_worked_on, comments, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
-	const insertIntoRepairsValues = [serialNumberId, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, money_saved];
+	const insertIntoRepairs = 'INSERT INTO repairs(serial_number_id, user_id, assist_id, printer_location, station_number, time_worked_on, comments, repair_cost, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
+	const insertIntoRepairsValues = [serialNumberId, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, repair_cost, money_saved];
 
 	try {
 	const response4 = await db.query(insertIntoRepairs, insertIntoRepairsValues);

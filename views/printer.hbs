@@ -52,6 +52,7 @@
 </div>
 </div>
 <hr />
+<h3>Repairs</h3>
 <table class="table table-bordered" id="repairTable">
   <thead>
     <tr>
@@ -61,6 +62,7 @@
       <th scope="col">User ID</th>
 	  <th scope="col">Location</th>
 	  <th scope="col">Station ID</th>
+	  <th scope="col">Repair Cost</th>
 	  <th scope="col">Money Saved</th>
 	  <th scope="col">Comments</th>
 	  <th scope="col">Date/Time Fixed</th>
@@ -69,7 +71,32 @@
   <tbody id="repairTBody">
   </tbody>
 </table>
+<h3>Issues</h3>
+<table class="table table-bordered" id="issuesTable">
+  <thead>
+    <tr>
+      <th scope="col">Repair ID</th>
+      <th scope="col">Issue Description</th>
+    </tr>
+  </thead>
+  <tbody id="issueTBody">
+  </tbody>
+</table>
+<h3>Parts Used</h3>
+<table class="table table-bordered" id="partsTable">
+  <thead>
+    <tr>
+	  <th scope="col">Repair ID</th>
+	  <th scope="col">Part Number</th>
+      <th scope="col">Part Name</th>
+      <th scope="col">Cost</th>
+    </tr>
+  </thead>
+  <tbody id="partNamesTBody">
+  </tbody>
+</table>
 
+<h3>All Time Stats</h3>
 <table class="table table-bordered w-50">
 	<tr>
 		<th colspan="2" class="text-center">Stats</th>
@@ -97,10 +124,11 @@ window.onload = function() {
   let tableBody = document.getElementById("repairTBody");
   // Create an HTML string for the new row
   let rows = {{{rows}}};
+  let issueRows = {{{issueRows}}};
   let totalMoneySaved = 0;
   console.log(rows);
   document.getElementById('totalTimesRepaired').innerHTML = rows.length;
-
+	console.log({{{issueRows}}});
 Object.keys(rows).forEach(key => {
   const value = rows[key];
 
@@ -117,6 +145,7 @@ Object.keys(rows).forEach(key => {
   let cell7 = newRow.insertCell(6);
   let cell8 = newRow.insertCell(7);
   let cell9 = newRow.insertCell(8);
+  let cell10 = newRow.insertCell(9);
 
   // Add data to the cells
   cell1.innerHTML = value.repair_id;
@@ -125,9 +154,10 @@ Object.keys(rows).forEach(key => {
   cell4.innerHTML = value.user_id;
   cell5.innerHTML = value.printer_location;
   cell6.innerHTML = value.station_number;
-  cell7.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
-  cell8.innerHTML = value.comments;
-  cell9.innerHTML = transformDate(value.date_time_fixed);
+  cell7.innerHTML = '$' + usMoneyFormatter.format(value.repair_cost);
+  cell8.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
+  cell9.innerHTML = value.comments;
+  cell10.innerHTML = transformDate(value.date_time_fixed);
   totalMoneySaved += parseFloat(value.money_saved);
 
   // Insert the HTML string immediately before the end of the tbody (effectively adding to the end)
@@ -135,12 +165,51 @@ Object.keys(rows).forEach(key => {
   
   });
   document.getElementById('totalMoneySaved').innerHTML = '$' + totalMoneySaved.toFixed(2);
+   let issuesBody = document.getElementById("issueTBody");
+  
+  Object.keys(issueRows).forEach(key => {
+  const value = issueRows[key];
+
+  // Insert a new row at the end of the tbody (-1 index means the last position)
+  let newRow1 = issuesBody.insertRow(-1);
+
+  // Insert new cells into the row in the correct order (index starts at 0)
+  let cell1 = newRow1.insertCell(0);
+  let cell2 = newRow1.insertCell(1);
+  cell1.innerHTML = value.repair_id;
+  cell2.innerHTML = value.issue_description;
+  });
+  
+  let partNameRows = {{{partNameRows}}};
+  
+     let partNamesBody = document.getElementById("partNamesTBody");
+  
+  Object.keys(partNameRows).forEach(key => {
+  const value = partNameRows[key];
+
+  // Insert a new row at the end of the tbody (-1 index means the last position)
+  let newRow = partNamesBody.insertRow(-1);
+
+  // Insert new cells into the row in the correct order (index starts at 0)
+  let cell1 = newRow.insertCell(0);
+  let cell2 = newRow.insertCell(1);
+  let cell3 = newRow.insertCell(2);
+  let cell4 = newRow.insertCell(3);
+  cell1.innerHTML = value.repair_id;
+  cell2.innerHTML = value.printer_part_id;
+  cell3.innerHTML = value.printer_part_name;
+  cell4.innerHTML = '$' + usMoneyFormatter.format(value.current_cost);
+  });
+  
+  
+  
+  
 }
 
 
 
 </script>
 
-
+<br /><br /><br /><br />
 </body>
 </html>

@@ -135,9 +135,10 @@
 </div>
 		
         <input type="hidden" value="0.00" name="money_saved" id="money_saved" />
+		<input type="hidden" value="0.00" name="repair_cost" id="repair_cost" />
 		<!--<button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>-->
 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCalculate">Submit</button>
-		<br /><br /><br /><br />
+		<br /><br /><br /><br /><br /><br />
 		
 		
 		<!-- Modal -->
@@ -260,6 +261,7 @@
 		newInnerHTML += "<div class='row'><div class='col'></div><div class='col'>-----------</div></div></div>";
 		let totalValueSaved = totalPrinterCost - totalPrinterPartCost;
 		newInnerHTML += "<div class='row'><div class='col'>Total Value Saved</div><div class='col'>$" + totalValueSaved.toFixed(2) + "</div>";
+		document.getElementById("repair_cost").value = totalPrinterPartCost.toFixed(2);
 		document.getElementById("money_saved").value = totalValueSaved.toFixed(2);
 		modalBody.innerHTML = newInnerHTML;
     });
