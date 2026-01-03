@@ -29,7 +29,8 @@ app.get('/', async (req, res) => {
    try {
     let printerTypes = await db.query('SELECT printer_type_id, printer_type_name, current_cost FROM printer_types');
 	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
-	let printerParts = await db.query('SELECT * FROM printer_parts ORDER BY popularity_score');
+	//let printerParts = await db.query('SELECT * FROM printer_parts ORDER BY popularity_score');
+	let printerParts = await db.query('SELECT printer_parts_used_for_printer_type.printer_part_id, printer_parts_used_for_printer_type.printer_type_id, printer_part_name, current_cost, popularity_score FROM printer_parts_used_for_printer_type INNER JOIN printer_parts ON printer_parts_used_for_printer_type.printer_part_id=printer_parts.printer_part_id ORDER BY popularity_score');
 	let issues = await db.query('SELECT * FROM issues ORDER BY popularity_score');
 	res.render('index', { title: 'Save the Zebras', 
 						  printer_types: JSON.stringify(printerTypes.rows),
@@ -94,6 +95,18 @@ async function getIssuesBySerialNumber(serialNumberId) {
   }	
 }
 
+async function getUserByUserId(userId) {
+	try {
+		const queryUserByUserId= 'SELECT first_name, last_name, org_id FROM users WHERE user_id=$1';
+		const queryUserByUserIdValues = [userId];
+		const { rows } = await db.query(queryUserByUserId, queryUserByUserIdValues);
+		return rows[0];
+	} catch (err) {
+    console.error(err);
+    return err;
+  }	
+}
+
 async function getPartNamesBySerialNumber(serialNumberId) {
 	try {
 		const queryPartNamesBySerialNumberId = 'SELECT repairs.repair_id, printer_parts.printer_part_id, printer_parts.printer_part_name, printer_parts.current_cost FROM printer_parts_used_for_repair INNER JOIN repairs ON repairs.repair_id=printer_parts_used_for_repair.repair_id INNER JOIN printer_parts ON printer_parts.printer_part_id=printer_parts_used_for_repair.printer_part_id WHERE repairs.serial_number_id=$1';
@@ -123,6 +136,8 @@ async function getPartNamesBySerialNumber(serialNumberId) {
 app.get('/user', async (req, res) => {
   let passedVariable = req.query.username;
   let assistNumber = await getAssistNumbers(passedVariable);
+  let user = await getUserByUserId(passedVariable);
+  console.log(user);
   try {
 	const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
 	const queryPrintersByUserIdValues = [passedVariable];
@@ -132,7 +147,7 @@ app.get('/user', async (req, res) => {
 		console.log('say something');
 		res.redirect('/error?username=DNE');
 	}
-	res.render('user', { title: 'Save the Zebras', rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber });
+	res.render('user', { title: 'Save the Zebras', rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber, firstName : user.first_name, lastName : user.last_name, orgId : user.org_id });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');

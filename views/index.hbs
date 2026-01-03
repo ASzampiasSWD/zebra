@@ -217,17 +217,40 @@
 		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
 		//selectPrinterPartNeeded.add(blankOption);
 		Object.keys(printer_parts).forEach(key => {
+	
 		  const value = printer_parts[key];
-		  let newOption = new Option(value.printer_part_name, value.printer_part_id);
-		  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
-		  mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
-		  selectPrinterPartNeeded.add(newOption);
+		  if (value.printer_type_id == 1) {
+			  let newOption = new Option(value.printer_part_name, value.printer_part_id);
+			  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
+			  mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
+			  selectPrinterPartNeeded.add(newOption);
+		  }
 		});
 		
 	}
 
 	function recordPrinterType(e) {
 		printerOption = e.target.value;
+		
+		let printer_parts= {{{printer_parts}}};
+		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
+		selectPrinterPartNeeded.innerHTML = "";
+		Object.keys(printer_parts).forEach(key => {
+		
+		  const value = printer_parts[key];
+		  if (value.printer_type_id == printerOption) {
+			  
+			  let newOption = new Option(value.printer_part_name, value.printer_part_id);
+			  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
+			  mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
+			  selectPrinterPartNeeded.add(newOption);
+		  }
+		});
+		
+		
+		
+		
+		
 	}
 		
 	function myFunction(e) {

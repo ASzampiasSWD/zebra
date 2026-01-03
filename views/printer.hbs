@@ -164,7 +164,7 @@ Object.keys(rows).forEach(key => {
   //tableBody.insertAdjacentHTML('beforeend', newRow);
   
   });
-  document.getElementById('totalMoneySaved').innerHTML = '$' + totalMoneySaved.toFixed(2);
+  document.getElementById('totalMoneySaved').innerHTML = '$' + usMoneyFormatter.format(totalMoneySaved);
    let issuesBody = document.getElementById("issueTBody");
   
   Object.keys(issueRows).forEach(key => {
@@ -200,16 +200,9 @@ Object.keys(rows).forEach(key => {
   cell3.innerHTML = value.printer_part_name;
   cell4.innerHTML = '$' + usMoneyFormatter.format(value.current_cost);
   });
-  
-  
-  
-  
 }
 
-
-
 </script>
-
 <br /><br /><br /><br />
 </body>
 </html>

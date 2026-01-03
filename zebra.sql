@@ -37,12 +37,16 @@ CREATE TABLE printers(
 
 CREATE TABLE printer_parts(
  printer_part_id varchar(50) PRIMARY KEY,
- printer_type_id int REFERENCES printer_types(printer_type_id),
  printer_part_name varchar(100) NOT NULL, 
  current_cost numeric(10, 2) DEFAULT 0.00,
  popularity_score int NOT NULL, 
- created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
- UNIQUE (printer_part_name, printer_type_id)
+ created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE printer_parts_used_for_printer_type(
+  printer_part_id varchar(50) REFERENCES printer_parts(printer_part_id) NOT NULL,
+  printer_type_id int REFERENCES printer_types(printer_type_id) NOT NULL,
+  UNIQUE (printer_part_id, printer_type_id)
 );
 
 CREATE TABLE issues(
@@ -90,13 +94,35 @@ INSERT INTO printer_types VALUES (DEFAULT, 'ASIN Mobile Carts Printer', 'Zebra',
 INSERT INTO ISSUES VALUES (DEFAULT, 'Broken Parts', 10);
 INSERT INTO ISSUES VALUES (DEFAULT, 'Dirty Roller', 20);
 INSERT INTO ISSUES VALUES (DEFAULT, 'Config and Calibration Issue', 30);
-INSERT INTO ISSUES VALUES (DEFAULT, 'Speed Settings', 40);
-INSERT INTO printer_parts VALUES ('P1058930-010', 1, 'Printhead', '213.70', 10);
-INSERT INTO printer_parts VALUES ('P1058930-080', 1, 'Platen Roller', '61.91', 20);
-INSERT INTO printer_parts VALUES ('79867M', 1, 'Driver Belt', '30.96', 30);
-INSERT INTO printer_parts VALUES ('P1105147-007', 1, 'Motherboard', '249.00', 40);
-INSERT INTO printer_parts VALUES ('P1058930-058', 1, 'Media Rewind Spindle', '263.55', 50);
-INSERT INTO printer_parts VALUES ('P1058930-078', 1, 'Printer Boots', '12.00', 500);
-INSERT INTO printers VALUES ('99J204901059', 1, '2021-01-13', '2022-01-13');
+
+INSERT INTO printer_parts VALUES ('P1058930-010', 'Printhead', '213.70', 10); /* SLAM Printer, RFID Printer */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-010', 1);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-010', 2);
+
+INSERT INTO printer_parts VALUES ('P1058930-080', 'Platen Roller', '61.91', 20);  /* SLAM Printer, RFID Printer */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-080', 1);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-080', 2);
+
+
+INSERT INTO printer_parts VALUES ('79867M', 'Driver Belt', '30.96', 30); /* SLAM Printer, RFID Printer */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('79867M', 1);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('79867M', 2);
+
+
+INSERT INTO printer_parts VALUES ('P1105147-007', 'Motherboard', '249.00', 40); /* SLAM Printer, RFID Printer?? */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1105147-007', 1);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1105147-007', 2);
+
+INSERT INTO printer_parts VALUES ('P1058930-058', 'Media Rewind Spindle', '263.55', 50); /* SLAM Printer */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-058', 1);
+
+
+INSERT INTO printer_parts VALUES ('P1058930-078', 'Printer Boots', '12.00', 500); /* SLAM PRINTER, RFID Printer */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 1);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 2);
+
+
+
+/*INSERT INTO printers VALUES ('99J204901059', 1, '2021-01-13', '2022-01-13');
 INSERT INTO repairs VALUES (DEFAULT, '99J204901059', 'szampiam', NULL, 'IT Cage', NULL, 45, NULL, 263.55);
-INSERT INTO repairs VALUES (DEFAULT, '99J204901059', 'szampiam', NULL, 'Singles', '4-11', 45, 'boots', 555.55);
+INSERT INTO repairs VALUES (DEFAULT, '99J204901059', 'szampiam', NULL, 'Singles', '4-11', 45, 'boots', 555.55);*/

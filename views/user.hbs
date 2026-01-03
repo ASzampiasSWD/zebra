@@ -12,6 +12,10 @@
 	 <link rel="stylesheet" type="text/css" href="styles/index.css" />
 	 <style>
 	 
+	 body {  background-image: linear-gradient(180deg, 
+                                      #9de7fa 100%, 
+									  #88a7d9 100%); }
+	 
 
 .table-bordered th,
 .table-bordered td {
@@ -48,10 +52,11 @@
 {{{body}}}
 <div class="row">
 <div class="col">
-<h2>Printers Repaired by User: {{{userId}}}</h2>
+<h2>Printers Repaired by User | {{{userId}}} | {{{firstName}}} {{{lastName}}} | {{{orgId}}}</h2>
 </div>
 </div>
 <hr />
+<h3>Repairs</h3>
 <table class="table table-bordered" id="repairTable">
   <thead>
     <tr>
@@ -72,7 +77,7 @@
 
 <table class="table table-bordered w-50">
 	<tr>
-		<th colspan="2" class="text-center">Stats</th>
+		<th colspan="2" class="text-center">User Stats</th>
 	</tr>
 	<tr>
 		<td class="col-2">Total Assists</td>
@@ -81,6 +86,10 @@
 	<tr>
 		<td class="col-2">Total Repairs</td>
 		<td class="col-2" id="totalRepairs"></td>
+	</tr>
+		<tr>
+		<td class="col-2">Total Repair Cost</td>
+		<td class="col-2" id="totalRepairCost"></td>
 	</tr>
 	<tr>
 		<td class="col-2">Total Money Saved</td>
@@ -103,6 +112,7 @@ window.onload = function() {
   // Create an HTML string for the new row
   let rows = {{{rows}}};
   let totalMoneySaved = 0;
+  let totalRepairCost = 0;
   console.log(rows);
   document.getElementById('totalRepairs').innerHTML = rows.length;
 
@@ -134,12 +144,14 @@ Object.keys(rows).forEach(key => {
   cell8.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
   cell9.innerHTML = transformDate(value.date_time_fixed);
   totalMoneySaved += parseFloat(value.money_saved);
+  totalRepairCost += parseFloat(value.repair_cost);
 
   // Insert the HTML string immediately before the end of the tbody (effectively adding to the end)
   //tableBody.insertAdjacentHTML('beforeend', newRow);
   
   });
   document.getElementById('totalMoney').innerHTML = '$' + usMoneyFormatter.format(totalMoneySaved);
+  document.getElementById('totalRepairCost').innerHTML = '$' + usMoneyFormatter.format(totalRepairCost);
 }
 
 </script>
