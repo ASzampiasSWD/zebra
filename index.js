@@ -3,12 +3,12 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const http = require('http');
 const https = require('https');
-const fs = require('fs');
 const app = express();
 const port = 3000;
 var pg = require('pg');
-const db = require('./db'); // Import the database module
+const db = require('./db');
 const warranty = require('./warranty');
+const credentials = require('./credentials');
 var favicon = require('serve-favicon');
 
 // Set up Handlebars view engine
@@ -296,8 +296,20 @@ app.post('/submit-new-user', async (req, res) => {
   }
 })
 
-
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);
+  //console.log(credentials);
 });
+/*
+http.createServer((req, res) => {
+    // Redirect to the HTTPS version of the same URL
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80, () => {
+    console.log('HTTP Server listening on port 80 for redirects');
+});
+
+const httpsServer = https.createServer(credentials, app);
+httpsServer.listen(443, () => {
+ console.log('HTTPS Server running on port 443');
+});*/
