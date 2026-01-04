@@ -1,15 +1,17 @@
-// server.js
-//const { Client } = require('pg');
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const app = express();
 const port = 3000;
 var pg = require('pg');
 const db = require('./db'); // Import the database module
+const warranty = require('./warranty');
 var favicon = require('serve-favicon');
-// Set up Handlebars view engine
 
+// Set up Handlebars view engine
 app.engine('.hbs', exphbs.engine({ // Note the .engine here
   defaultLayout: 'main', // Assumes a 'main.hbs' in your layouts folder
   extname: '.hbs', // Specifies the file extension
@@ -29,11 +31,9 @@ app.get('/', async (req, res) => {
    try {
     let printerTypes = await db.query('SELECT printer_type_id, printer_type_name, current_cost FROM printer_types');
 	let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
-	//let printerParts = await db.query('SELECT * FROM printer_parts ORDER BY popularity_score');
 	let printerParts = await db.query('SELECT printer_parts_used_for_printer_type.printer_part_id, printer_parts_used_for_printer_type.printer_type_id, printer_part_name, current_cost, popularity_score FROM printer_parts_used_for_printer_type INNER JOIN printer_parts ON printer_parts_used_for_printer_type.printer_part_id=printer_parts.printer_part_id ORDER BY popularity_score');
 	let issues = await db.query('SELECT * FROM issues ORDER BY popularity_score');
-	res.render('index', { title: 'Save the Zebras', 
-						  printer_types: JSON.stringify(printerTypes.rows),
+	res.render('index', { printer_types: JSON.stringify(printerTypes.rows),
 						  active_users: JSON.stringify(activeUsers.rows),
 						  printer_parts: JSON.stringify(printerParts.rows),
 						  issues: JSON.stringify(issues.rows)});
@@ -44,7 +44,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/success', (req, res) => {
-  res.render('success', { title: 'Save the Zebras'});
+  res.render('success');
 })
 
 app.get('/error', (req, res) => {
@@ -119,35 +119,19 @@ async function getPartNamesBySerialNumber(serialNumberId) {
   }	
 }
 
-
-
-/*async function getPrinterTypeCost(serialNumber) {
-   try {
-	const queryAssistsByUserId = 'SELECT COUNT(serial_number_id) FROM repairs WHERE assist_id = $1';
-	const queryAssistsByUserIdValues = [userId];
-    const { rows } = await db.query(queryAssistsByUserId, queryAssistsByUserIdValues);
-	return rows[0].count;
-  } catch (err) {
-    console.error(err);
-    return err;
-  }
-}*/
-
 app.get('/user', async (req, res) => {
   let passedVariable = req.query.username;
   let assistNumber = await getAssistNumbers(passedVariable);
   let user = await getUserByUserId(passedVariable);
-  console.log(user);
   try {
 	const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
 	const queryPrintersByUserIdValues = [passedVariable];
     const { rows } = await db.query(queryPrintersByUserId, queryPrintersByUserIdValues);
 	console.log(JSON.stringify(rows));
 	if (rows.length == 0) {
-		console.log('say something');
 		res.redirect('/error?username=DNE');
 	}
-	res.render('user', { title: 'Save the Zebras', rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber, firstName : user.first_name, lastName : user.last_name, orgId : user.org_id });
+	res.render('user', { rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber, firstName : user.first_name, lastName : user.last_name, orgId : user.org_id });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -167,8 +151,7 @@ app.get('/printer', async (req, res) => {
 		console.log('say something');
 		res.redirect('/error?printer=DNE');
 	}
-  res.render('printer', { title: 'Save the Zebras',
-						  rows: JSON.stringify(rows),
+  res.render('printer', { rows: JSON.stringify(rows),
 						  issueRows : JSON.stringify(issueRows),
 						  partNameRows : JSON.stringify(partNameRows) });
   } catch (err) {
@@ -182,7 +165,7 @@ app.get('/list', async (req, res) => {
     try {
     const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id ORDER BY repair_id');
 	console.log(JSON.stringify(rows));
-	res.render('list', { title: 'Save the Zebras', rows: JSON.stringify(rows) });
+	res.render('list', { rows: JSON.stringify(rows) });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -192,7 +175,7 @@ app.get('/list', async (req, res) => {
 app.get('/join', async (req, res) => {
     try {
     const { rows } = await db.query('SELECT org_id FROM organizations');
-	res.render('join', { title: 'Save the Zebras', rows: JSON.stringify(rows) });
+	res.render('join', { rows: JSON.stringify(rows) });
   } catch (err) {
     console.error(err);
     res.status(500).send('Server Error');
@@ -234,6 +217,8 @@ app.post('/submit-repair', async (req, res) => {
 			res.send(err);
 		}
   }
+  	// Update Printer with warranty. 
+	warranty.setWarrantyOnPrinter(serialNumberId);
   
 	const insertIntoRepairs = 'INSERT INTO repairs(serial_number_id, user_id, assist_id, printer_location, station_number, time_worked_on, comments, repair_cost, money_saved) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
 	const insertIntoRepairsValues = [serialNumberId, userId, assistBy, printerLocation, stationNumber, timeSpentOnTask, comments, repair_cost, money_saved];
