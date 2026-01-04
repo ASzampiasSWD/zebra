@@ -140,7 +140,7 @@ app.get('/user', async (req, res) => {
 
 app.get('/printer', async (req, res) => {
   let passedVariable = req.query.serial;
-  const queryRepairsBySerialNumberId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, comments, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE repairs.serial_number_id = $1 ORDER BY repair_id';
+  const queryRepairsBySerialNumberId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, comments, date_time_fixed, printers.warranty_start_date, printers.warranty_end_date, printers.is_active FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE repairs.serial_number_id = $1 ORDER BY repair_id';
   const queryRepairsBySerialNumberIdValues = [passedVariable];
   try {
   const { rows } = await db.query(queryRepairsBySerialNumberId, queryRepairsBySerialNumberIdValues);
@@ -153,7 +153,8 @@ app.get('/printer', async (req, res) => {
 	}
   res.render('printer', { rows: JSON.stringify(rows),
 						  issueRows : JSON.stringify(issueRows),
-						  partNameRows : JSON.stringify(partNameRows) });
+						  partNameRows : JSON.stringify(partNameRows),
+                          serial : passedVariable });
   } catch (err) {
 	  console.error(err);
 	  res.status(500).send('Server Error');
