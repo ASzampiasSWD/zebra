@@ -1,352 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
-    <!-- Bootstrap CSS -->
-    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
-    <link rel="stylesheet" href="./style.css" />-->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="styles/index.css" />
+	<title>Save the Zebras</title>
 </head>
 <body>
-{{{body}}}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="">Zebra Printers</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+	{{{body}}}
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="">Zebra Printers</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Add Repair</a>
-      </li>
-	   <li class="nav-item">
-        <a class="nav-link" href="/list">Fixed Printer List</a>
-      </li>
-	   <li class="nav-item">
-        <a class="nav-link" href="/join">Add User</a>
-      </li>
-  </div>
-</nav>
-<br /><br />
-<div class="container">
-	<h2>Add Printer Repair</h2>
-	<hr />
-      <form action="/submit-repair" method="POST">
-	  
-	  <div class="form-row">
-        <!-- Form elements go here -->
-
-        <div class="form-group col-md-6">
-          <label for="serialNumberId" class="form-label">Serial Number ID</label>
-          <input type="text" class="form-control" id="serialNumberId" placeholder="Serial Number ID" name="serialNumberId" maxlength="22" required />
-        </div>
-		
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="/">Add Repair</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/list">Fixed Printer List</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/join">Add User</a>
+				</li>
+			</ul>
 		</div>
-		<div class="form-row">
-		<div class="form-group col-md-6">
-		    <label for="printerType" class="form-label">Printer Type</label>
-			<select id="printerType" name="printerType" onchange="recordPrinterType(event)" class="form-select form-control form-select-lg" required>
-			</select>	
-		</div>
-		
-		</div>
-		
-				<div class="form-row">
-		<div class="form-group col-md-6">
-		    		<label for="printerLocation" class="form-label">Printer Location</label>
-	<select id="printerLocation" name="printerLocation" class="form-select form-control form-select-lg" onchange="myFunction(event)" required>
-	  <option value="IT Cage">IT Cage</option>
-	  <option value="Singles-Mix-Kickout">Singles-Mix-Kickout</option>
-	  <option value="Jackpot">Jackpot</option>
-	  <option value="Upper Mezz">Upper Mezz</option>
-	  <option value="Pole Number">Pole Number</option>
-	  <!--<option value="Security Desk">Security Desk</option>-->
-	</select>
-		</div>
-		
-		<div class="form-group col-md-6">
-					<label for="stationNumber" class="form-label">Station Number</label>
-	<input type="text" disabled name="stationNumber" class="form-control w-50" placeholder="Optional" id="stationNumber" />
-		
-		
-		</div>
-		
-		
-		</div>
-		
-
-		<div class="form-row">
+	</nav>
+	<br /><br />
+	<div class="container">
+		<h2>Add Printer Repair</h2>
+		<hr />
+		<form action="/submit-repair" method="POST">
+			<div class="form-row">
 				<div class="form-group col-md-6">
-		 <label for="partNameNeeded" class="form-label">Part Name Needed</label>
-		<select id="partNameNeeded" name="partNameNeeded" class="form-select form-control" multiple class="form-select form-control form-select-lg w-25" aria-label="multiple select example">
-		</select>
-		
-		</div>
-		<div class="form-group col-md-6">
-		  <label for="issue" class="form-label">Issue</label>
-	<select id="issue" name="issue" multiple class="form-select form-control form-select-lg w-50" required>
-	</select>
-		
-		
-		</div>
-		
-		</div>
-		
-		
+					<label for="serialNumberId" class="form-label">Serial Number ID</label>
+					<input type="text" class="form-control" id="serialNumberId" placeholder="Serial Number ID"
+						name="serialNumberId" maxlength="22" required />
+				</div>
 
-	
-	<div class="form-row">
-			<div class="form-group col-md-3">
-		  <label for="userId" class="form-label">User ID</label><br />
-		  <select id="userId" name="userId" onchange="recordUserId(event)" class="form-select form-control form-select-lg" required>
-		  </select>
-		</div>
-	
-			<div class="form-group col-md-3">
-		  <label for="timeSpentOnTask" class="form-label">Minutes Spent On Task</label>
-		<input type="number" id="timeSpentOnTask" name="timeSpentOnTask" class="form-control" required />
-		</div>
-	
-		
-		
-		<div class="form-group col-md-3">
-		  <label for="assistBy" class="form-label">Assisted By (optional)</label>
-		<select id="assistBy" name="assistBy" class="form-select form-control form-select-lg">
-			</select>
-		</div>
-		
-		
-	
-		</div>
-		
-	
-		<div class="form-row">
-			<div class="form-group col-md-9">
-  <label for="comments" class="form-label">Comments</label>
-  <textarea class="form-control" id="comments" name="comments" maxlength="100" placeholder="Optional" rows="3"></textarea>
-  </div>
-</div>
-		
-        <input type="hidden" value="0.00" name="money_saved" id="money_saved" />
-		<input type="hidden" value="0.00" name="repair_cost" id="repair_cost" />
-		<!--<button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>-->
-		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCalculate">Submit</button>
-		<br /><br /><br /><br /><br /><br />
-		
-		
-		<!-- Modal -->
-<div class="modal fade" id="modalCalculate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Cost Savings</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="modalBody">
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="printerType" class="form-label">Printer Type</label>
+					<select id="printerType" name="printerType" onchange="recordPrinterType(event)"
+						class="form-select form-control form-select-lg" required>
+					</select>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="printerLocation" class="form-label">Printer Location</label>
+					<select id="printerLocation" name="printerLocation" class="form-select form-control form-select-lg"
+						onchange="recordPrinterLocation(event)" required>
+						<option value="IT Cage">IT Cage</option>
+						<option value="Singles-Mix-Kickout">Singles-Mix-Kickout</option>
+						<option value="Jackpot">Jackpot</option>
+						<option value="Upper Mezz">Upper Mezz</option>
+						<option value="Pole Number">Pole Number</option>
+					</select>
+				</div>
+				<div class="form-group col-md-6">
+					<label for="stationNumber" class="form-label">Station Number</label>
+					<input type="text" disabled name="stationNumber" class="form-control w-50" placeholder="Optional"
+						id="stationNumber" />
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-6">
+					<label for="partNameNeeded" class="form-label">Part Name Needed</label>
+					<select id="partNameNeeded" name="partNameNeeded" class="form-select form-control form-select-lg" multiple
+						aria-label="multiple select example">
+					</select>
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" id="submitBtn" class="btn btn-primary">Confirm</button>
-      </div>
-    </div>
-  </div>
-</div>
-		
+				</div>
+				<div class="form-group col-md-6">
+					<label for="issue" class="form-label">Issue</label>
+					<select id="issue" name="issue" multiple class="form-select form-control form-select-lg w-50"
+						required>
+					</select>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-3">
+					<label for="userId" class="form-label">User ID</label><br />
+					<select id="userId" name="userId" onchange="recordUserId(event)"
+						class="form-select form-control form-select-lg" required>
+					</select>
+				</div>
+				<div class="form-group col-md-3">
+					<label for="timeSpentOnTask" class="form-label">Minutes Spent On Task</label>
+					<input type="number" id="timeSpentOnTask" name="timeSpentOnTask" class="form-control" required />
+				</div>
+				<div class="form-group col-md-3">
+					<label for="assistBy" class="form-label">Assisted By (optional)</label>
+					<select id="assistBy" name="assistBy" class="form-select form-control form-select-lg">
+					</select>
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="form-group col-md-9">
+					<label for="comments" class="form-label">Comments</label>
+					<textarea class="form-control" id="comments" name="comments" maxlength="100" placeholder="Optional"
+						rows="3"></textarea>
+				</div>
+			</div>
+			<input type="hidden" value="0.00" name="money_saved" id="money_saved" />
+			<input type="hidden" value="0.00" name="repair_cost" id="repair_cost" />
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				data-target="#modalCalculate">Submit</button>
+			<br /><br /><br /><br /><br /><br />
+			<!-- Modal -->
+			<div class="modal fade" id="modalCalculate" tabindex="-1" role="dialog"
+				aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLongTitle">Cost Savings</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body" id="modalBody">
 
-      </form>
- </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<button type="submit" id="submitBtn" class="btn btn-primary">Confirm</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
 	<script type="text/javascript">
-	
-	let printerOption = 1;
-	let partNameNeeded = [];
-	let mapPrinterPartCostById = new Map();
-	let mapPrinterPartNameById = new Map();
-	
-	window.onload = function() {
-		let printer_types = {{{printer_types}}};
-		const selectPrinterType = document.getElementById("printerType");
-		
 
-		Object.keys(printer_types).forEach(key => {
-		  const value = printer_types[key];
-		  console.log(key, value.printer_type, value.current_cost);
-		  let newOption = new Option(value.printer_type_name, value.printer_type_id);
-		  selectPrinterType.add(newOption);
-		});
-		
-		let issues = {{{issues}}};
-		const selectIssues = document.getElementById("issue");
+		let printerOption = 1;
+		let partNameNeeded = [];
+		let mapPrinterPartCostById = new Map();
+		let mapPrinterPartNameById = new Map();
 
-		Object.keys(issues).forEach(key => {
-		  const value = issues[key];
-		  console.log(key, value.issue_description, value.issue_id);
-		  let newOption = new Option(value.issue_description, value.issue_id);
-		  selectIssues.add(newOption);
-		});
-		
-		let active_users = {{{active_users}}};
-		const selectUserId = document.getElementById("userId");
-		const selectAssistBy = document.getElementById("assistBy");
-		let blankOption = new Option("", "");
-		let blankOption2 = new Option("", "");
-		selectAssistBy.add(blankOption2);
-		Object.keys(active_users).forEach(key => {
-		  const value = active_users[key];
-		  let newOption = new Option(value.user_id, value.user_id);
-		  let newOption1 = new Option(value.user_id, value.user_id);
-		  selectUserId.add(newOption);
-		  selectAssistBy.add(newOption1);
-		});
-		selectAssistBy.remove(1); // remove the first user that gets loaded from assist list.
-		
-		let printer_parts= {{{printer_parts}}};
-		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
-		//selectPrinterPartNeeded.add(blankOption);
-		Object.keys(printer_parts).forEach(key => {
-	
-		  const value = printer_parts[key];
-		  if (value.printer_type_id == 1) {
-			  let newOption = new Option(value.printer_part_name, value.printer_part_id);
-			  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
-			  mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
-			  selectPrinterPartNeeded.add(newOption);
-		  }
-		});
-		
-	}
-	function recordUserId(e) {
-		let userId = e.target.value;
-		console.log(userId);
-		const selectAssistBy = document.getElementById("assistBy");
-		selectAssistBy.innerHTML = "";
-		
-		let active_users = {{{active_users}}};
-		//const selectAssistBy = document.getElementById("assistBy");
-		let blankOption2 = new Option("", "");
-		selectAssistBy.add(blankOption2);
-		Object.keys(active_users).forEach(key => {
-		  const value = active_users[key];
-		  if (value.user_id != userId) {
-		  let newOption = new Option(value.user_id, value.user_id);
-		  selectAssistBy.add(newOption);
-		  }
-		});
-		
-	
-	
-	}
+		window.onload = function () {
+			let printer_types = {{{printer_types}}};
+			const selectPrinterType = document.getElementById("printerType");
 
-	function recordPrinterType(e) {
-		printerOption = e.target.value;
-		
-		let printer_parts= {{{printer_parts}}};
-		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
-		selectPrinterPartNeeded.innerHTML = "";
-		Object.keys(printer_parts).forEach(key => {
-		
-		  const value = printer_parts[key];
-		  if (value.printer_type_id == printerOption) {
-			  
-			  let newOption = new Option(value.printer_part_name, value.printer_part_id);
-			  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
-			  mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
-			  selectPrinterPartNeeded.add(newOption);
-		  }		  
-		});
-		
-		const selectPrinterLocation = document.getElementById("printerLocation");
-		selectPrinterLocation.innerHTML = "";
-		let optionITCage = new Option("IT Cage", "IT Cage");
-		let optionSinglesMixKickout = new Option("Singles-Mix-Kickout", "Singles-Mix-Kickout");
-		let optionJackpot = new Option("Jackpot", "Jackpot");
-		let optionUpperMezz = new Option("Upper Mezz", "Upper Mezz");
-		let optionPoleNumber = new Option("Pole Number", "Pole Number");
-		switch (printerOption) {
-			case "1":
-			 console.log('slam printer');
-			 selectPrinterLocation.add(optionITCage);
-			 selectPrinterLocation.add(optionSinglesMixKickout);
-			 selectPrinterLocation.add(optionJackpot);
-			 selectPrinterLocation.add(optionUpperMezz);
-			 selectPrinterLocation.add(optionPoleNumber);
-			 break;
-			case "2":
-			 console.log('rfid');
-			 selectPrinterLocation.add(optionITCage);
-			 selectPrinterLocation.add(optionSinglesMixKickout);
-			 selectPrinterLocation.add(optionJackpot);
-			 selectPrinterLocation.add(optionUpperMezz);
-			 selectPrinterLocation.add(optionPoleNumber);
-			 break;
-			case "3":
-			 console.log('pslip');
-			 selectPrinterLocation.add(optionITCage);
-			 document.getElementById('stationNumber').disabled = true;
-			 break;
-			case "4":
-			 console.log('mobile carts');
-			 selectPrinterLocation.add(optionITCage);
-			 document.getElementById('stationNumber').disabled = true;
-			 
-		
+			Object.keys(printer_types).forEach(key => {
+				const value = printer_types[key];
+				let newOption = new Option(value.printer_type_name, value.printer_type_id);
+				selectPrinterType.add(newOption);
+			});
+
+			let issues = {{{issues}}};
+			const selectIssues = document.getElementById("issue");
+
+			Object.keys(issues).forEach(key => {
+				const value = issues[key];
+				let newOption = new Option(value.issue_description, value.issue_id);
+				selectIssues.add(newOption);
+			});
+
+			let active_users = {{{active_users}}};
+			const selectUserId = document.getElementById("userId");
+			const selectAssistBy = document.getElementById("assistBy");
+			let blankOption = new Option("", "");
+			let blankOption2 = new Option("", "");
+			selectAssistBy.add(blankOption2);
+			Object.keys(active_users).forEach(key => {
+				const value = active_users[key];
+				let newOption = new Option(value.user_id, value.user_id);
+				let newOption1 = new Option(value.user_id, value.user_id);
+				selectUserId.add(newOption);
+				selectAssistBy.add(newOption1);
+			});
+			selectAssistBy.remove(1); // remove the first user that gets loaded from assist list.
+
+			let printer_parts = {{{printer_parts}}};
+			const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
+
+			Object.keys(printer_parts).forEach(key => {
+				const value = printer_parts[key];
+				if (value.printer_type_id == 1) {
+					let newOption = new Option(value.printer_part_name, value.printer_part_id);
+					mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
+					mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
+					selectPrinterPartNeeded.add(newOption);
+				}
+			});		
 		}
-		
-		
-		
-		
-		
-	}
-		
-	function myFunction(e) {
-		if (e.target.value != "IT Cage" && e.target.value != "" && e.target.value != "Security Desk") {
-			document.getElementById('stationNumber').disabled = false;
-		} else {
-			document.getElementById('stationNumber').disabled = true;
-		}
-	}
+		function recordUserId(e) {
+			let currentUserId = e.target.value;
+			const selectAssistBy = document.getElementById("assistBy");
+			selectAssistBy.innerHTML = "";
+			let active_users = {{{active_users}}};
+			let optionBlank = new Option("", "");
+			selectAssistBy.add(optionBlank);
 
-	
-	$(document).ready(function () {
-    $('#modalCalculate').on('shown.bs.modal', function (e) {
-		let newPrinterOption = printerOption - 1;
-		let printer_types = {{{printer_types}}};
-		let totalPrinterName = printer_types[newPrinterOption].printer_type_name;
-        let totalPrinterCost = Number(printer_types[newPrinterOption].current_cost);
-		let totalPrinterPartCost = 0;
-		let newInnerHTML = "";
-		
-		let modalBody = document.getElementById("modalBody");
-		newInnerHTML += "<div class='row'><div class='col'>" + totalPrinterName + "</div><div class='col'>+$" + totalPrinterCost.toFixed(2) + "</div></div>";
-				
-		let printer_parts = {{{printer_parts}}};
-		let printerParts = $('#partNameNeeded').val();
-		
-		 for (let m = 0; m < printerParts.length; m++) {
-		  totalPrinterPartCost += Number(mapPrinterPartCostById.get(printerParts[m]));
-		  newInnerHTML += "<div class='row'><div class='col'>" + mapPrinterPartNameById.get(printerParts[m]) + "</div><div class='col'>-$" + mapPrinterPartCostById.get(printerParts[m]) + "</div></div>";
+			Object.keys(active_users).forEach(key => {
+				const value = active_users[key];
+				if (value.user_id != currentUserId) {
+					let optionAssistedBy = new Option(value.user_id, value.user_id);
+					selectAssistBy.add(optionAssistedBy);
+				}
+			});	
 		}
-		newInnerHTML += "<div class='row'><div class='col'></div><div class='col'>-----------</div></div></div>";
-		let totalValueSaved = totalPrinterCost - totalPrinterPartCost;
-		newInnerHTML += "<div class='row'><div class='col'>Total Value Saved</div><div class='col'>$" + totalValueSaved.toFixed(2) + "</div>";
-		document.getElementById("repair_cost").value = totalPrinterPartCost.toFixed(2);
-		document.getElementById("money_saved").value = totalValueSaved.toFixed(2);
-		modalBody.innerHTML = newInnerHTML;
-    });
-});
-	
+
+		function recordPrinterType(e) {
+			printerOption = e.target.value;
+			let printer_parts = {{{printer_parts}}};
+			const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
+			selectPrinterPartNeeded.innerHTML = "";
+			Object.keys(printer_parts).forEach(key => {
+				const value = printer_parts[key];
+				if (value.printer_type_id == printerOption) {
+					let newOption = new Option(value.printer_part_name, value.printer_part_id);
+					mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
+					mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
+					selectPrinterPartNeeded.add(newOption);
+				}
+			});
+
+			const selectPrinterLocation = document.getElementById("printerLocation");
+			selectPrinterLocation.innerHTML = "";
+			const optionITCage = new Option("IT Cage", "IT Cage");
+			const optionSinglesMixKickout = new Option("Singles-Mix-Kickout", "Singles-Mix-Kickout");
+			const optionJackpot = new Option("Jackpot", "Jackpot");
+			const optionUpperMezz = new Option("Upper Mezz", "Upper Mezz");
+			const optionPoleNumber = new Option("Pole Number", "Pole Number");
+			switch (printerOption) {
+				case "1":
+					selectPrinterLocation.add(optionITCage);
+					selectPrinterLocation.add(optionSinglesMixKickout);
+					selectPrinterLocation.add(optionJackpot);
+					selectPrinterLocation.add(optionUpperMezz);
+					selectPrinterLocation.add(optionPoleNumber);
+					break;
+				case "2":
+					selectPrinterLocation.add(optionITCage);
+					selectPrinterLocation.add(optionSinglesMixKickout);
+					selectPrinterLocation.add(optionJackpot);
+					selectPrinterLocation.add(optionUpperMezz);
+					selectPrinterLocation.add(optionPoleNumber);
+					break;
+				case "3":
+					selectPrinterLocation.add(optionITCage);
+					document.getElementById("stationNumber").disabled = true;
+					break;
+				case "4":
+					selectPrinterLocation.add(optionITCage);
+					document.getElementById("stationNumber").disabled = true;
+			}	
+		}
+
+		function recordPrinterLocation(e) {
+			if (e.target.value != "IT Cage") {
+				document.getElementById("stationNumber").disabled = false;
+			} else {
+				document.getElementById("stationNumber").disabled = true;
+			}
+		}
+
+		$(document).ready(function () {
+			$('#modalCalculate').on('shown.bs.modal', function (e) {
+				let newPrinterOption = printerOption - 1;
+				let printer_types = {{{printer_types}}};
+				let totalPrinterName = printer_types[newPrinterOption].printer_type_name;
+				let totalPrinterCost = Number(printer_types[newPrinterOption].current_cost);
+				let totalPrinterPartCost = 0;
+				let newInnerHTML = "";
+
+				let modalBody = document.getElementById("modalBody");
+				newInnerHTML += "<div class='row'><div class='col'>" + totalPrinterName + "</div><div class='col'>+$" + totalPrinterCost.toFixed(2) + "</div></div>";
+
+				let printer_parts = {{{ printer_parts }}};
+				let printerParts = $('#partNameNeeded').val();
+
+				for (let m = 0; m < printerParts.length; m++) {
+					totalPrinterPartCost += Number(mapPrinterPartCostById.get(printerParts[m]));
+					newInnerHTML += "<div class='row'><div class='col'>" + mapPrinterPartNameById.get(printerParts[m]) + "</div><div class='col'>-$" + mapPrinterPartCostById.get(printerParts[m]) + "</div></div>";
+				}
+				newInnerHTML += "<div class='row'><div class='col'></div><div class='col'>-----------</div></div></div>";
+				let totalValueSaved = totalPrinterCost - totalPrinterPartCost;
+				newInnerHTML += "<div class='row'><div class='col'>Total Value Saved</div><div class='col'>$" + totalValueSaved.toFixed(2) + "</div>";
+				document.getElementById("repair_cost").value = totalPrinterPartCost.toFixed(2);
+				document.getElementById("money_saved").value = totalValueSaved.toFixed(2);
+				modalBody.innerHTML = newInnerHTML;
+    		});
+		});
 	</script>
 </body>
 </html>
