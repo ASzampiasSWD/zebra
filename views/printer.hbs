@@ -122,13 +122,11 @@
 <script>
 window.onload = function() {
   let tableBody = document.getElementById("repairTBody");
-  // Create an HTML string for the new row
   let rows = {{{rows}}};
   let issueRows = {{{issueRows}}};
   let totalMoneySaved = 0;
-  console.log(rows);
   document.getElementById('totalTimesRepaired').innerHTML = rows.length;
-	console.log({{{issueRows}}});
+
 Object.keys(rows).forEach(key => {
   const value = rows[key];
 
@@ -181,8 +179,8 @@ Object.keys(rows).forEach(key => {
   });
   
   let partNameRows = {{{partNameRows}}};
-  
-     let partNamesBody = document.getElementById("partNamesTBody");
+  let partNamesBody = document.getElementById("partNamesTBody");
+  let bPartsExist = false;
   
   Object.keys(partNameRows).forEach(key => {
   const value = partNameRows[key];
@@ -199,7 +197,16 @@ Object.keys(rows).forEach(key => {
   cell2.innerHTML = value.printer_part_id;
   cell3.innerHTML = value.printer_part_name;
   cell4.innerHTML = '$' + usMoneyFormatter.format(value.current_cost);
+  bPartsExist = true;
   });
+  if (bPartsExist == false) {
+	  let newRow = partNamesBody.insertRow(-1);
+	  let cell1 = newRow.insertCell(0);
+	  cell1.colSpan = 4;
+	  cell1.style.textAlign = "center";
+	  cell1.innerHTML = "No Parts Have Been Used";
+  
+  }
 }
 
 </script>

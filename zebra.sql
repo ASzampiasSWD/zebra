@@ -121,6 +121,17 @@ INSERT INTO printer_parts VALUES ('P1058930-078', 'Printer Boots', '12.00', 500)
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 1);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 2);
 
+INSERT INTO printer_parts VALUES('P1112640-241', 'Printhead', '155.07', 10);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-241', 3);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-241', 4);
+
+INSERT INTO printer_parts VALUES('P1112640-251', 'Platen Roller', '20.64', 20); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-251', 3);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-251', 4);
+
+INSERT INTO printer_parts VALUES('PSprings-PSlip-MC', 'Springs', '5.00', 30); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 3);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 4);
 
 
 /*INSERT INTO printers VALUES ('99J204901059', 1, '2021-01-13', '2022-01-13');

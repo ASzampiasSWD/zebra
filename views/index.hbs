@@ -62,12 +62,10 @@
 	<select id="printerLocation" name="printerLocation" class="form-select form-control form-select-lg" onchange="myFunction(event)" required>
 	  <option value="IT Cage">IT Cage</option>
 	  <option value="Singles-Mix-Kickout">Singles-Mix-Kickout</option>
-	  <option value="AFE2">AFE2</option>
-	  <option value="AFE1">AFE1</option>
 	  <option value="Jackpot">Jackpot</option>
 	  <option value="Upper Mezz">Upper Mezz</option>
 	  <option value="Pole Number">Pole Number</option>
-	  <option value="Security Desk">Security Desk</option>
+	  <!--<option value="Security Desk">Security Desk</option>-->
 	</select>
 		</div>
 		
@@ -105,7 +103,7 @@
 	<div class="form-row">
 			<div class="form-group col-md-3">
 		  <label for="userId" class="form-label">User ID</label><br />
-		  <select id="userId" name="userId" class="form-select form-control form-select-lg" required>
+		  <select id="userId" name="userId" onchange="recordUserId(event)" class="form-select form-control form-select-lg" required>
 		  </select>
 		</div>
 	
@@ -212,6 +210,7 @@
 		  selectUserId.add(newOption);
 		  selectAssistBy.add(newOption1);
 		});
+		selectAssistBy.remove(1); // remove the first user that gets loaded from assist list.
 		
 		let printer_parts= {{{printer_parts}}};
 		const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
@@ -227,6 +226,27 @@
 		  }
 		});
 		
+	}
+	function recordUserId(e) {
+		let userId = e.target.value;
+		console.log(userId);
+		const selectAssistBy = document.getElementById("assistBy");
+		selectAssistBy.innerHTML = "";
+		
+		let active_users = {{{active_users}}};
+		//const selectAssistBy = document.getElementById("assistBy");
+		let blankOption2 = new Option("", "");
+		selectAssistBy.add(blankOption2);
+		Object.keys(active_users).forEach(key => {
+		  const value = active_users[key];
+		  if (value.user_id != userId) {
+		  let newOption = new Option(value.user_id, value.user_id);
+		  selectAssistBy.add(newOption);
+		  }
+		});
+		
+	
+	
 	}
 
 	function recordPrinterType(e) {
@@ -244,8 +264,45 @@
 			  mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
 			  mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
 			  selectPrinterPartNeeded.add(newOption);
-		  }
+		  }		  
 		});
+		
+		const selectPrinterLocation = document.getElementById("printerLocation");
+		selectPrinterLocation.innerHTML = "";
+		let optionITCage = new Option("IT Cage", "IT Cage");
+		let optionSinglesMixKickout = new Option("Singles-Mix-Kickout", "Singles-Mix-Kickout");
+		let optionJackpot = new Option("Jackpot", "Jackpot");
+		let optionUpperMezz = new Option("Upper Mezz", "Upper Mezz");
+		let optionPoleNumber = new Option("Pole Number", "Pole Number");
+		switch (printerOption) {
+			case "1":
+			 console.log('slam printer');
+			 selectPrinterLocation.add(optionITCage);
+			 selectPrinterLocation.add(optionSinglesMixKickout);
+			 selectPrinterLocation.add(optionJackpot);
+			 selectPrinterLocation.add(optionUpperMezz);
+			 selectPrinterLocation.add(optionPoleNumber);
+			 break;
+			case "2":
+			 console.log('rfid');
+			 selectPrinterLocation.add(optionITCage);
+			 selectPrinterLocation.add(optionSinglesMixKickout);
+			 selectPrinterLocation.add(optionJackpot);
+			 selectPrinterLocation.add(optionUpperMezz);
+			 selectPrinterLocation.add(optionPoleNumber);
+			 break;
+			case "3":
+			 console.log('pslip');
+			 selectPrinterLocation.add(optionITCage);
+			 document.getElementById('stationNumber').disabled = true;
+			 break;
+			case "4":
+			 console.log('mobile carts');
+			 selectPrinterLocation.add(optionITCage);
+			 document.getElementById('stationNumber').disabled = true;
+			 
+		
+		}
 		
 		
 		
