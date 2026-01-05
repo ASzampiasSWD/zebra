@@ -1,19 +1,32 @@
 const fs = require('fs');
+const selfsigned = require('selfsigned');
+require('dotenv').config();
 
 let credentials = {};
 
-// Certificate
-try {
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/savethezebras.work/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/savethezebras.work/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/savethezebras.work/chain.pem', 'utf8');
-credentials = {
-	key: privateKey,
-	cert: certificate,
-	ca: ca
-};
-} catch (err) {
-  console.log(err);
+// HTTPS Certificate
+if (process.env.NODE_ENV === 'production') {
+	try {
+	const privateKey = fs.readFileSync(process.env.SSL_KEY_PATH, 'utf8');
+	const certificate = fs.readFileSync(process.env.SSL_CERT_PATH, 'utf8');
+	const ca = fs.readFileSync(process.env.SSL_CA_PATH, 'utf8');
+
+	credentials = {
+		key: privateKey,
+		cert: certificate,
+		ca: ca
+	};
+
+	} catch (err) {
+		console.log(err);
+	}
+} else {
+	credentials = {
+		key: fs.readFileSync(process.env.SSL_KEY_PATH_DEV),
+		cert: fs.readFileSync(process.env.SSL_CERT_PATH_DEV),
+		ca: fs.readFileSync(process.env.SSL_CA_PATH_DEV)
+	};
+	console.log('Using self-signed certificates for development');	
 }
 
 module.exports = {

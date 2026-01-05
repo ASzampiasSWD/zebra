@@ -297,11 +297,11 @@ app.post('/submit-new-user', async (req, res) => {
 })
 
 // FOR TEST WITHOUT CERTS
-app.listen(port, () => {
+/*app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);
-});
+});*/
 
-/* FOR PRODUCTION
+//FOR PRODUCTION
 http.createServer((req, res) => {
     // Redirect to the HTTPS version of the same URL
     res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
@@ -313,4 +313,4 @@ http.createServer((req, res) => {
 const httpsServer = https.createServer(credentials.credentials, app);
 httpsServer.listen(443, () => {
  console.log('HTTPS Server running on port 443');
-});*/
+});

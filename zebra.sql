@@ -81,7 +81,6 @@ CREATE TABLE printer_parts_used_for_repair(
  UNIQUE (repair_id, printer_part_id)
 );
 
-
 INSERT INTO organizations VALUES ('ORF3', '2020 Northgate Commerce Pkwy', 'Suffolk', 'VA', '23435', 'USA');
 INSERT INTO organizations VALUES ('ORF2', '5045 Portsmouth Blvd', 'Chesapeake', 'VA', '23321', 'USA');
 INSERT INTO organizations VALUES ('ORF4', '1795 Dam Neck Rd', 'Virginia Beach', 'VA', '23453', 'USA');
@@ -103,11 +102,9 @@ INSERT INTO printer_parts VALUES ('P1058930-080', 'Platen Roller', '61.91', 20);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-080', 1);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-080', 2);
 
-
 INSERT INTO printer_parts VALUES ('79867M', 'Driver Belt', '30.96', 30); /* SLAM Printer, RFID Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('79867M', 1);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('79867M', 2);
-
 
 INSERT INTO printer_parts VALUES ('P1105147-007', 'Motherboard', '249.00', 40); /* SLAM Printer, RFID Printer?? */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1105147-007', 1);
@@ -115,7 +112,6 @@ INSERT INTO printer_parts_used_for_printer_type VALUES ('P1105147-007', 2);
 
 INSERT INTO printer_parts VALUES ('P1058930-058', 'Media Rewind Spindle', '263.55', 50); /* SLAM Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-058', 1);
-
 
 INSERT INTO printer_parts VALUES ('P1058930-078', 'Printer Boots', '12.00', 500); /* SLAM PRINTER, RFID Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 1);
@@ -132,8 +128,3 @@ INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-251', 4);
 INSERT INTO printer_parts VALUES('PSprings-PSlip-MC', 'Springs', '5.00', 30); /* PSlip Printer, ASIN MC */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 3);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 4);
-
-
-/*INSERT INTO printers VALUES ('99J204901059', 1, '2021-01-13', '2022-01-13');
-INSERT INTO repairs VALUES (DEFAULT, '99J204901059', 'szampiam', NULL, 'IT Cage', NULL, 45, NULL, 263.55);
-INSERT INTO repairs VALUES (DEFAULT, '99J204901059', 'szampiam', NULL, 'Singles', '4-11', 45, 'boots', 555.55);*/
