@@ -1,9 +1,12 @@
 function transformDate(strDate) {
-	//let strDate = "2026-01-02T02:03:29.804Z";
+	if (strDate == null) {
+		return "N/A";	
+	}
 	let dtDate = Date.parse(strDate);
 	let dateObject = new Date(dtDate);
 	const options = { hour: '2-digit', minute: '2-digit' };
-	const timeWithoutSeconds = dateObject.toLocaleTimeString(undefined, options)	
+	const timeWithoutSeconds = dateObject.toLocaleTimeString(undefined, options);
+	console.log(dateObject.toLocaleDateString() + " " + timeWithoutSeconds);
 	return dateObject.toLocaleDateString() + " " + timeWithoutSeconds;
 }
 
