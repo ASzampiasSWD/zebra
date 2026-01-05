@@ -1,5 +1,4 @@
 const fs = require('fs');
-const selfsigned = require('selfsigned');
 require('dotenv').config();
 
 let credentials = {};
