@@ -178,6 +178,7 @@
 			const selectAssistBy = document.getElementById("assistBy");
 			let blankOption = new Option("", "");
 			let blankOption2 = new Option("", "");
+            selectUserId.add(blankOption);
 			selectAssistBy.add(blankOption2);
 			Object.keys(active_users).forEach(key => {
 				const value = active_users[key];
