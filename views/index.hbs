@@ -196,7 +196,7 @@
 				const value = printer_parts[key];
 				if (value.printer_type_id == 1) {
 					let newOption = new Option(value.printer_part_name, value.printer_part_id);
-					mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
+					mapPrinterPartCostById.set(value.printer_part_id, value.price);
 					mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
 					selectPrinterPartNeeded.add(newOption);
 				}
@@ -228,7 +228,7 @@
 				const value = printer_parts[key];
 				if (value.printer_type_id == printerOption) {
 					let newOption = new Option(value.printer_part_name, value.printer_part_id);
-					mapPrinterPartCostById.set(value.printer_part_id, value.current_cost);
+					mapPrinterPartCostById.set(value.printer_part_id, value.price);
 					mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
 					selectPrinterPartNeeded.add(newOption);
 				}
@@ -279,7 +279,7 @@
 				let newPrinterOption = printerOption - 1;
 				let printer_types = {{{printer_types}}};
 				let totalPrinterName = printer_types[newPrinterOption].printer_type_name;
-				let totalPrinterCost = Number(printer_types[newPrinterOption].current_cost);
+				let totalPrinterCost = Number(printer_types[newPrinterOption].price);
 				let totalPrinterPartCost = 0;
 				let newInnerHTML = "";
 

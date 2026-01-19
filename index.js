@@ -28,9 +28,9 @@ app.use(express.urlencoded({ extended: true }));
 // Define a route to render a view
 app.get('/', async (req, res) => {
 	try {
-		let printerTypes = await db.query('SELECT printer_type_id, printer_type_name, current_cost FROM printer_types');
+		let printerTypes = await db.query('SELECT printer_type_id, printer_type_name, price FROM printer_types INNER JOIN product_prices ON printer_types.product_price_id=product_prices.product_price_id');
 		let activeUsers = await db.query('SELECT user_id FROM users WHERE is_active = TRUE');
-		let printerParts = await db.query('SELECT printer_parts_used_for_printer_type.printer_part_id, printer_parts_used_for_printer_type.printer_type_id, printer_part_name, current_cost, popularity_score FROM printer_parts_used_for_printer_type INNER JOIN printer_parts ON printer_parts_used_for_printer_type.printer_part_id=printer_parts.printer_part_id ORDER BY popularity_score');
+		let printerParts = await db.query('SELECT printer_parts_used_for_printer_type.printer_part_id, printer_parts_used_for_printer_type.printer_type_id, printer_part_name, price, popularity_score FROM printer_parts_used_for_printer_type INNER JOIN printer_parts ON printer_parts_used_for_printer_type.printer_part_id=printer_parts.printer_part_id INNER JOIN product_prices ON printer_parts.product_price_id=product_prices.product_price_id ORDER BY popularity_score');
 		let issues = await db.query('SELECT * FROM issues ORDER BY popularity_score');
 		res.render('index', {
 			printer_types: JSON.stringify(printerTypes.rows),
@@ -112,7 +112,7 @@ async function getUserByUserId(userId) {
 
 async function getPartNamesBySerialNumber(serialNumberId) {
 	try {
-		const queryPartNamesBySerialNumberId = 'SELECT repairs.repair_id, printer_parts.printer_part_id, printer_parts.printer_part_name, printer_parts.current_cost FROM printer_parts_used_for_repair INNER JOIN repairs ON repairs.repair_id=printer_parts_used_for_repair.repair_id INNER JOIN printer_parts ON printer_parts.printer_part_id=printer_parts_used_for_repair.printer_part_id WHERE repairs.serial_number_id=$1';
+		const queryPartNamesBySerialNumberId = 'SELECT repairs.repair_id, printer_parts.printer_part_id, printer_parts.printer_part_name, price FROM printer_parts_used_for_repair INNER JOIN repairs ON repairs.repair_id=printer_parts_used_for_repair.repair_id INNER JOIN printer_parts ON printer_parts.printer_part_id=printer_parts_used_for_repair.printer_part_id INNER JOIN product_prices ON printer_parts.product_price_id = product_prices.product_price_id WHERE repairs.serial_number_id=$1';
 		const queryPartNamesBySerialNumberIdValues = [serialNumberId];
 		const { rows } = await db.query(queryPartNamesBySerialNumberId, queryPartNamesBySerialNumberIdValues);
 		return rows;
