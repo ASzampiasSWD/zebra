@@ -163,7 +163,7 @@
 				let cell7 = newRow.insertCell(6);
 				let cell8 = newRow.insertCell(7);
 				cell1.innerHTML = value.repair_id;
-				cell2.innerHTML = value.user_id;
+				cell2.innerHTML = '<a href="/user?username=' + value.user_id + '">' + value.user_id + '</a>';
 				cell3.innerHTML = value.printer_location;
 				cell4.innerHTML = value.station_number;
 				cell5.innerHTML = '$' + usMoneyFormatter.format(value.repair_cost);

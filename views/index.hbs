@@ -8,6 +8,22 @@
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="styles/index.css" />
 	<title>Save the Zebras</title>
+	<style>
+		.scrollable-checkbox-list {
+					max-height: 125px;
+					overflow-y: auto;
+					border: 1px solid #ced4da;
+					background-color: white;
+					color: #495057;
+					line-height: 1.5;
+					font-weight: 400;
+					font-size: 1rem;
+					border-radius: .25rem;
+					padding: .375rem .75rem;
+					background-clip: padding-box;
+					transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+					height: 125px; }
+	</style>
 </head>
 <body>
 	{{{body}}}
@@ -72,18 +88,15 @@
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="form-group col-md-6">
-					<label for="partNameNeeded" class="form-label">Part Name Needed</label>
-					<select id="partNameNeeded" name="partNameNeeded" class="form-select form-control form-select-lg" multiple
-						aria-label="multiple select example">
-					</select>
-
+				<div class="form-group col-md-6 w-50">
+					<label for="partNameNeededCheck" class="form-label">Part Name Needed</label>
+					<div id="partNameNeededCheck" class="scrollable-checkbox-list">
+					</div>
 				</div>
 				<div class="form-group col-md-6">
-					<label for="issue" class="form-label">Issue</label>
-					<select id="issue" name="issue" multiple class="form-select form-control form-select-lg w-50"
-						required>
-					</select>
+					<label for="issueCheck" class="form-label">Issue</label>
+					<div id="issueCheck" class="scrollable-checkbox-list w-50">
+					</div>
 				</div>
 			</div>
 			<div class="form-row">
@@ -110,6 +123,8 @@
 						rows="3"></textarea>
 				</div>
 			</div>
+			<input type="hidden" value="" name="issue" id="issue" />
+			<input type="hidden" value="" name="partNameNeeded" id="partNameNeeded" />
 			<input type="hidden" value="0.00" name="money_saved" id="money_saved" />
 			<input type="hidden" value="0.00" name="repair_cost" id="repair_cost" />
 			<button type="button" class="btn btn-primary" data-toggle="modal"
@@ -151,6 +166,7 @@
 
 		let printerOption = 1;
 		let partNameNeeded = [];
+		let issueChosen = [];
 		let mapPrinterPartCostById = new Map();
 		let mapPrinterPartNameById = new Map();
 
@@ -165,12 +181,12 @@
 			});
 
 			let issues = {{{issues}}};
-			const selectIssues = document.getElementById("issue");
+			let checkIssues = document.getElementById("issueCheck")
 
 			Object.keys(issues).forEach(key => {
 				const value = issues[key];
-				let newOption = new Option(value.issue_description, value.issue_id);
-				selectIssues.add(newOption);
+				let checkId = "issue" + key;
+				checkIssues.innerHTML += '<div class="form-check"> <input class="form-check-input" type="checkbox" onchange="recordIssueChosen(this)" value="' + value.issue_id  +'" id="' + checkId  +'"> <label class="form-check-label" style="display: block;" for="' + checkId + '">' + value.issue_description + '</label></div>';
 			});
 
 			let active_users = {{{active_users}}};
@@ -178,7 +194,7 @@
 			const selectAssistBy = document.getElementById("assistBy");
 			let blankOption = new Option("", "");
 			let blankOption2 = new Option("", "");
-            selectUserId.add(blankOption);
+			selectUserId.add(blankOption);
 			selectAssistBy.add(blankOption2);
 			Object.keys(active_users).forEach(key => {
 				const value = active_users[key];
@@ -190,7 +206,7 @@
 			selectAssistBy.remove(1); // remove the first user that gets loaded from assist list.
 
 			let printer_parts = {{{printer_parts}}};
-			const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
+			const checkPrinterPartNeeded = document.getElementById("partNameNeededCheck");
 
 			Object.keys(printer_parts).forEach(key => {
 				const value = printer_parts[key];
@@ -198,10 +214,27 @@
 					let newOption = new Option(value.printer_part_name, value.printer_part_id);
 					mapPrinterPartCostById.set(value.printer_part_id, value.price);
 					mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
-					selectPrinterPartNeeded.add(newOption);
+					checkPrinterPartNeeded.innerHTML += '<div class="form-check"> <input class="form-check-input" type="checkbox" onchange="recordPrinterPartNeeded(this)" value="' + value.printer_part_id  +'" id="' + value.printer_part_id  +'"> <label class="form-check-label" style="display: block;" for="' + value.printer_part_id + '">' + value.printer_part_name + '</label></div>';
 				}
 			});		
 		}
+
+		function recordPrinterPartNeeded(e) {
+			if (e.checked) {
+				partNameNeeded.push(e.value);
+			} else {
+				partNameNeeded = partNameNeeded.filter(item => item !== e.value);
+			}    
+		}
+ 
+		function recordIssueChosen(e) {
+			if (e.checked) {
+				issueChosen.push(e.value);
+			} else {
+				issueChosen = issueChosen.filter(item => item !== e.value);
+			}    
+		}
+
 		function recordUserId(e) {
 			let currentUserId = e.target.value;
 			const selectAssistBy = document.getElementById("assistBy");
@@ -222,15 +255,16 @@
 		function recordPrinterType(e) {
 			printerOption = e.target.value;
 			let printer_parts = {{{printer_parts}}};
-			const selectPrinterPartNeeded = document.getElementById("partNameNeeded");
-			selectPrinterPartNeeded.innerHTML = "";
+			let checkPrinterPartNeeded = document.getElementById("partNameNeededCheck");
+			partNameNeededCheck.innerHTML = "";
+			partNameNeeded = [];
 			Object.keys(printer_parts).forEach(key => {
 				const value = printer_parts[key];
 				if (value.printer_type_id == printerOption) {
 					let newOption = new Option(value.printer_part_name, value.printer_part_id);
 					mapPrinterPartCostById.set(value.printer_part_id, value.price);
 					mapPrinterPartNameById.set(value.printer_part_id, value.printer_part_name);
-					selectPrinterPartNeeded.add(newOption);
+					checkPrinterPartNeeded.innerHTML += '<div class="form-check"> <input class="form-check-input" type="checkbox" onchange="recordPrinterPartNeeded(this)" value="' + value.printer_part_id  +'" id="' + key  +'"> <label class="form-check-label" style="display: block;" for="' + key + '">' + value.printer_part_name + '</label></div>';
 				}
 			});
 
@@ -276,18 +310,23 @@
 
 		$(document).ready(function () {
 			$('#modalCalculate').on('shown.bs.modal', function (e) {
+				let modalBody = document.getElementById("modalBody");
+				if (issueChosen.length == 0) {
+					modalBody.innerHTML = "<p>Must chose issue. Go Back</p>";
+					alert('Must pick issue from checklist');
+					$('#modalCalculate').modal('hide');
+					return;
+				}
 				let newPrinterOption = printerOption - 1;
 				let printer_types = {{{printer_types}}};
 				let totalPrinterName = printer_types[newPrinterOption].printer_type_name;
 				let totalPrinterCost = Number(printer_types[newPrinterOption].price);
 				let totalPrinterPartCost = 0;
 				let newInnerHTML = "";
-
-				let modalBody = document.getElementById("modalBody");
 				newInnerHTML += "<div class='row'><div class='col'>" + totalPrinterName + "</div><div class='col'>+$" + totalPrinterCost.toFixed(2) + "</div></div>";
 
 				let printer_parts = {{{ printer_parts }}};
-				let printerParts = $('#partNameNeeded').val();
+				let printerParts = partNameNeeded; //$('#partNameNeeded').val();
 
 				for (let m = 0; m < printerParts.length; m++) {
 					totalPrinterPartCost += Number(mapPrinterPartCostById.get(printerParts[m]));
@@ -296,10 +335,12 @@
 				newInnerHTML += "<div class='row'><div class='col'></div><div class='col'>-----------</div></div></div>";
 				let totalValueSaved = totalPrinterCost - totalPrinterPartCost;
 				newInnerHTML += "<div class='row'><div class='col'>Total Value Saved</div><div class='col'>$" + totalValueSaved.toFixed(2) + "</div>";
+				document.getElementById("issue").value = issueChosen;
+				document.getElementById("partNameNeeded").value = partNameNeeded;
 				document.getElementById("repair_cost").value = totalPrinterPartCost.toFixed(2);
 				document.getElementById("money_saved").value = totalValueSaved.toFixed(2);
 				modalBody.innerHTML = newInnerHTML;
-    		});
+			});
 		});
 	</script>
 </body>

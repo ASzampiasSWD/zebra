@@ -186,6 +186,8 @@ app.get('/join', async (req, res) => {
 });
 
 app.post('/submit-repair', async (req, res) => {
+    console.log('hellooogator');
+    console.log(req.body);
 	let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, repair_cost, money_saved } = req.body;
 
 	if (assistBy == "") {
@@ -196,7 +198,14 @@ app.post('/submit-repair', async (req, res) => {
 	}
 	if (partNameNeeded == "") {
 		partNameNeeded = null;
-	}
+	} else {
+        partNameNeeded = partNameNeeded.split(",");
+    }
+    if (issue == "") {
+        issue = null;
+    } else {
+        issue = issue.split(",");
+    }
 
 	const queryPrinterBySerialNumberId = 'SELECT * FROM printers WHERE serial_number_id = $1';
 	const queryPrinterBySerialNumberIdValues = [serialNumberId];
@@ -295,6 +304,7 @@ app.post('/submit-new-user', async (req, res) => {
 /*app.listen(3000, () => {
   console.log(`Example app listening on port 3000!`);
 });*/
+
 
 //FOR PRODUCTION
 http.createServer((req, res) => {

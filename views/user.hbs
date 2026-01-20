@@ -123,7 +123,7 @@
 				let cell8 = newRow.insertCell(7);
 				let cell9 = newRow.insertCell(8);
 				cell1.innerHTML = value.repair_id;
-				cell2.innerHTML = value.serial_number_id;
+				cell2.innerHTML = '<a href="/printer?serial=' + value.serial_number_id + '">' + value.serial_number_id + '</a>'; //value.serial_number_id;
 				cell3.innerHTML = value.printer_type_name;
 				cell4.innerHTML = value.user_id;
 				cell5.innerHTML = value.printer_location;
