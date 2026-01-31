@@ -146,6 +146,11 @@ INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', '77197M', '32.16', '2026
 INSERT INTO printer_parts VALUES ('77197M', 10, 'Peel Assembly Roller', 60); /* SLAM Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('77197M', 1);
 
+INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', '43894', '12.44', '2026-01-01 00:00:00.000000+00', NULL, 'Zebra Store', 'images/prices/43894_01-24-2026.png');
+INSERT INTO printer_parts VALUES ('77197M', 10, 'Z-Series Screws', 70); /* SLAM Printer, RFID Printer */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('43894', 1);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('43894', 2);
+
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1058930-078', '12.00', '2026-01-01 00:00:00.000000+00', NULL, 'Zebra Store', 'images/prices/P1058930-078_01-18-2026.png');
 INSERT INTO printer_parts VALUES ('P1058930-078', 11, 'Printer Boots', 500); /* SLAM PRINTER, RFID Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 1);
