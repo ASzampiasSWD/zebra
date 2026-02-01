@@ -147,27 +147,31 @@ INSERT INTO printer_parts VALUES ('77197M', 10, 'Peel Assembly Roller', 60); /* 
 INSERT INTO printer_parts_used_for_printer_type VALUES ('77197M', 1);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', '43894', '12.44', '2026-01-01 00:00:00.000000+00', NULL, 'Zebra Store', 'images/prices/43894_01-24-2026.png');
-INSERT INTO printer_parts VALUES ('77197M', 10, 'Z-Series Screws', 70); /* SLAM Printer, RFID Printer */
+INSERT INTO printer_parts VALUES ('43894', 11, 'Z-Series Screws', 70); /* SLAM Printer, RFID Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('43894', 1);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('43894', 2);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1058930-078', '12.00', '2026-01-01 00:00:00.000000+00', NULL, 'Zebra Store', 'images/prices/P1058930-078_01-18-2026.png');
-INSERT INTO printer_parts VALUES ('P1058930-078', 11, 'Printer Boots', 500); /* SLAM PRINTER, RFID Printer */
+INSERT INTO printer_parts VALUES ('P1058930-078', 12, 'Printer Boots', 500); /* SLAM PRINTER, RFID Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 1);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 2);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1112640-241', '161.27', '2026-01-01 00:00:00.000000+00', NULL, 'DSCS', 'images/prices/P1112640-241_01-18-2026.png');
-INSERT INTO printer_parts VALUES('P1112640-241', 12, 'Printhead', 10);
+INSERT INTO printer_parts VALUES('P1112640-241', 13, 'Printhead', 10);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-241', 3);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-241', 4);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1112640-251', '29.90', '2026-01-01 00:00:00.000000+00', NULL, 'Coupa', 'images/prices/P1112640-251_01-18-2026.png');
-INSERT INTO printer_parts VALUES('P1112640-251', 13, 'Platen Roller', 20); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts VALUES('P1112640-251', 14, 'Platen Roller', 20); /* PSlip Printer, ASIN MC */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-251', 3);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-251', 4);
 
+INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'AdjustableYellowArms', '31.44', '2026-01-01 00:00:00.000000+00', NULL, 'Coupa', 'images/prices/AdjustableYellowArms_01-24-2026.png');
+INSERT INTO printer_parts VALUES('AdjustableYellowArms', 14, 'Adjustable Yellow Arms', 30); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('AdjustableYellowArms', 3);
+
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'PSprings-PSlip-MC', '5.00', '2026-01-01 00:00:00.000000+00', NULL, 'Coupa', 'images/prices/PSprings-PSlip-MC_01-18-2026.png');
-INSERT INTO printer_parts VALUES('PSprings-PSlip-MC', 14, 'Springs', 30); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts VALUES('PSprings-PSlip-MC', 15, 'Springs', 40); /* PSlip Printer, ASIN MC */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 3);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 4);
 
@@ -187,6 +191,8 @@ INSERT INTO printers VALUES ('99N223900948',1,'2022-11-07','2023-11-07','t',null
 INSERT INTO printers VALUES ('99J211101433',1,'2021-03-24','2022-03-24','t',null,'2026-01-24 03:51:42.157192+00');
 INSERT INTO printers VALUES ('99J204901067',1,'2021-01-13','2022-01-13','t',null,'2026-01-24 08:19:10.352412+00');
 INSERT INTO printers VALUES ('99N223900954',1,'2022-11-07','2023-11-07','t',null,'2026-01-25 01:27:49.671638+00');
+INSERT INTO printers VALUES ('99J211101522',1,'2021-03-24','2022-03-24','t',null,'2026-01-31 04:37:51.734719+00');
+INSERT INTO printers VALUES ('99N223800040',1,'2022-11-07','2023-11-07','t',null,'2026-01-31 06:23:20.833981+00');
 
 INSERT INTO repairs VALUES (DEFAULT,'99J212401998','szampiam',null,'IT Cage',null,20,'Squeaky media spindle. Loose handle fixed. Password set.',0.00,1269.79,'2026-01-03 06:11:32.383487+00');
 INSERT INTO repairs VALUES (DEFAULT,'99J211101461','szampiam',null,'Jackpot','East 3',50,'Bent pieces at printhead. Took two items from another printer.',33.07,1236.72,'2026-01-03 07:55:26.973906+00');
@@ -205,6 +211,8 @@ INSERT INTO repairs VALUES (DEFAULT,'99N223900948','szampiam',null,'IT Cage',nul
 INSERT INTO repairs VALUES (DEFAULT,'99J211101433','szampiam',null,'IT Cage',null,30,'Platen roller and printhead were in bad condition! ',246.77,1023.02,'2026-01-24 03:51:42.168679+00');
 INSERT INTO repairs VALUES (DEFAULT,'99J204901067','szampiam',null,'IT Cage',null,60,'NEW PART: 77197M',32.16,1237.63,'2026-01-24 08:19:10.357521+00');
 INSERT INTO repairs VALUES (DEFAULT,'99N223900954','szampiam',null,'IT Cage',null,45,'Will need a new printhead soon. Valentine/Heart edition',308.06,961.73,'2026-01-25 01:27:49.67782+00');
+INSERT INTO repairs VALUES (DEFAULT,'99J211101522','szampiam',null,'IT Cage',null,25,'Assorted Screws',12.44,1257.35,'2026-01-31 04:37:51.749223+00');
+INSERT INTO repairs VALUES (DEFAULT,'99N223800040','szampiam',null,'IT Cage',null,45,'Batman icon on side. ',65.23,1204.56,'2026-01-31 06:23:20.838988+00');
 
 INSERT INTO printer_parts_used_for_repair VALUES (2, 'P1058930-080');
 INSERT INTO printer_parts_used_for_repair VALUES (3, 'P1105147-007');
@@ -224,6 +232,9 @@ INSERT INTO printer_parts_used_for_repair VALUES (15, 'P1058930-080');
 INSERT INTO printer_parts_used_for_repair VALUES (16, '77197M');
 INSERT INTO printer_parts_used_for_repair VALUES (17, 'P1058930-080');
 INSERT INTO printer_parts_used_for_repair VALUES (17, 'P1058930-058');
+INSERT INTO printer_parts_used_for_repair VALUES (18, '43894');
+INSERT INTO printer_parts_used_for_repair VALUES (19, 'P1058930-080');
+INSERT INTO printer_parts_used_for_repair VALUES (19, '77197M');
 
 INSERT INTO issues_resolved_on_repair VALUES (1,2); 
 INSERT INTO issues_resolved_on_repair VALUES (1,3);
@@ -243,3 +254,5 @@ INSERT INTO issues_resolved_on_repair VALUES (14,1);
 INSERT INTO issues_resolved_on_repair VALUES (15,1);
 INSERT INTO issues_resolved_on_repair VALUES (16,1);
 INSERT INTO issues_resolved_on_repair VALUES (17,1);
+INSERT INTO issues_resolved_on_repair VALUES (18,1);
+INSERT INTO issues_resolved_on_repair VALUES (19,1);
