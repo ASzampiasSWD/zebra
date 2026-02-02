@@ -146,32 +146,37 @@ INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', '77197M', '32.16', '2026
 INSERT INTO printer_parts VALUES ('77197M', 10, 'Peel Assembly Roller', 60); /* SLAM Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('77197M', 1);
 
+INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1058930-104', '89.00', '2026-01-01 00:00:00.000000+00', NULL, 'Coupa', 'images/prices/P1058930-104_01-24-2026.png');
+INSERT INTO printer_parts VALUES ('P1058930-104', 11, 'Toggle Bar', 70); /* SLAM Printer, RFID Printer */
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-104', 1);
+INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-104', 2);
+
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', '43894', '12.44', '2026-01-01 00:00:00.000000+00', NULL, 'Zebra Store', 'images/prices/43894_01-24-2026.png');
-INSERT INTO printer_parts VALUES ('43894', 11, 'Z-Series Screws', 70); /* SLAM Printer, RFID Printer */
+INSERT INTO printer_parts VALUES ('43894', 12, 'Z-Series Screws', 80); /* SLAM Printer, RFID Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('43894', 1);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('43894', 2);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1058930-078', '12.00', '2026-01-01 00:00:00.000000+00', NULL, 'Zebra Store', 'images/prices/P1058930-078_01-18-2026.png');
-INSERT INTO printer_parts VALUES ('P1058930-078', 12, 'Printer Boots', 500); /* SLAM PRINTER, RFID Printer */
+INSERT INTO printer_parts VALUES ('P1058930-078', 13, 'Printer Boots', 500); /* SLAM PRINTER, RFID Printer */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 1);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1058930-078', 2);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1112640-241', '161.27', '2026-01-01 00:00:00.000000+00', NULL, 'DSCS', 'images/prices/P1112640-241_01-18-2026.png');
-INSERT INTO printer_parts VALUES('P1112640-241', 13, 'Printhead', 10);
+INSERT INTO printer_parts VALUES('P1112640-241', 14, 'Printhead', 10);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-241', 3);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-241', 4);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'P1112640-251', '29.90', '2026-01-01 00:00:00.000000+00', NULL, 'Coupa', 'images/prices/P1112640-251_01-18-2026.png');
-INSERT INTO printer_parts VALUES('P1112640-251', 14, 'Platen Roller', 20); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts VALUES('P1112640-251', 15, 'Platen Roller', 20); /* PSlip Printer, ASIN MC */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-251', 3);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('P1112640-251', 4);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'AdjustableYellowArms', '31.44', '2026-01-01 00:00:00.000000+00', NULL, 'Coupa', 'images/prices/AdjustableYellowArms_01-24-2026.png');
-INSERT INTO printer_parts VALUES('AdjustableYellowArms', 14, 'Adjustable Yellow Arms', 30); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts VALUES('AdjustableYellowArms', 16, 'Adjustable Yellow Arms', 30); /* PSlip Printer, ASIN MC */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('AdjustableYellowArms', 3);
 
 INSERT INTO product_prices VALUES (DEFAULT, 'szampiam', 'PSprings-PSlip-MC', '5.00', '2026-01-01 00:00:00.000000+00', NULL, 'Coupa', 'images/prices/PSprings-PSlip-MC_01-18-2026.png');
-INSERT INTO printer_parts VALUES('PSprings-PSlip-MC', 15, 'Springs', 40); /* PSlip Printer, ASIN MC */
+INSERT INTO printer_parts VALUES('PSprings-PSlip-MC', 17, 'Springs', 40); /* PSlip Printer, ASIN MC */
 INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 3);
 INSERT INTO printer_parts_used_for_printer_type VALUES ('PSprings-PSlip-MC', 4);
 
