@@ -57,14 +57,14 @@
 				<div class="form-group col-md-6">
 					<label for="serialNumberId" class="form-label">Serial Number ID</label>
 					<input type="text" class="form-control" id="serialNumberId" placeholder="Serial Number ID"
-						name="serialNumberId" maxlength="22" required />
+						name="serialNumberId" maxlength="22" onchange="recordSerialNumber(event)" required />
 				</div>
 
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
 					<label for="printerType" class="form-label">Printer Type</label>
-					<select id="printerType" name="printerType" onchange="recordPrinterType(event)"
+					<select id="printerType" name="printerType" onchange="recordPrinterType(event, 'input')"
 						class="form-select form-control form-select-lg" required>
 					</select>
 				</div>
@@ -219,6 +219,17 @@
 			});		
 		}
 
+        function recordSerialNumber(e) {
+            if (e.target.value.startsWith('D9') || e.target.value.startsWith('D3')) {
+                document.getElementById('printerType').value = "3";
+                recordPrinterType('3');
+            }
+            if (e.target.value.startsWith('99')) {
+                document.getElementById('printerType').value = "1";
+                recordPrinterType('1');
+            }
+        }
+
 		function recordPrinterPartNeeded(e) {
 			if (e.checked) {
 				partNameNeeded.push(e.value);
@@ -252,8 +263,12 @@
 			});	
 		}
 
-		function recordPrinterType(e) {
-			printerOption = e.target.value;
+		function recordPrinterType(e, location) {
+            if (location == 'input') {
+			    printerOption = e.target.value;
+            } else {
+                printerOption = e;
+            }
 			let printer_parts = {{{printer_parts}}};
 			let checkPrinterPartNeeded = document.getElementById("partNameNeededCheck");
 			partNameNeededCheck.innerHTML = "";
@@ -275,6 +290,7 @@
 			const optionJackpot = new Option("Jackpot", "Jackpot");
 			const optionUpperMezz = new Option("Upper Mezz", "Upper Mezz");
 			const optionPoleNumber = new Option("Pole Number", "Pole Number");
+            const optionRedShelf = new Option("Red Shelf", "Red Shelf");
 			switch (printerOption) {
 				case "1":
 					selectPrinterLocation.add(optionITCage);
@@ -291,6 +307,7 @@
 					selectPrinterLocation.add(optionPoleNumber);
 					break;
 				case "3":
+                    selectPrinterLocation.add(optionRedShelf);
 					selectPrinterLocation.add(optionITCage);
 					document.getElementById("stationNumber").disabled = true;
 					break;
@@ -301,7 +318,7 @@
 		}
 
 		function recordPrinterLocation(e) {
-			if (e.target.value != "IT Cage") {
+			if (e.target.value != "IT Cage" && e.target.value != "Red Shelf") {
 				document.getElementById("stationNumber").disabled = false;
 			} else {
 				document.getElementById("stationNumber").disabled = true;
