@@ -36,7 +36,7 @@ const setWarrantyOnPrinter = async (serialNumber) => {
       'Te': 'trailers',
       'Priority': 'u=0'
     },
-    timeout: 5000,
+    timeout: 8000,
   };
 
   axios.post(url, data, config)
