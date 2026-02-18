@@ -3,6 +3,7 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 const http = require('http');
 const https = require('https');
+const multer = require('multer');
 const app = express();
 var pg = require('pg');
 const db = require('./db');
@@ -24,6 +25,33 @@ app.use(favicon(path.join(__dirname, 'public', 'styles', 'favicon.ico')));
 
 // Built-in middleware to parse URL-encoded bodies (form data)
 app.use(express.urlencoded({ extended: true }));
+
+// Configure Multer for basic file destination
+const upload = multer({ dest: 'uploads/' });
+
+function getFormattedDate(date) {
+  let year = date.getFullYear();
+  // getMonth() returns 0-11, so add 1 for actual month number (1-12)
+  let month = (date.getMonth() + 1).toString().padStart(2, '0');
+  let day = date.getDate().toString().padStart(2, '0');
+
+  // Combine the parts in MM-DD-YYYY format
+  return `${month}-${day}-${year}`;
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Specify the destination folder
+  },
+  filename: function (req, file, cb) {
+    let today = new Date();
+    let arFileName = file.originalname.split('.'); // get extension.
+    cb(null, req.body.productName + '_' + getFormattedDate(today) + '.' + arFileName[1]);
+  }
+});
+
+const uploadCustom = multer({ storage: storage });
+
 
 // Define a route to render a view
 app.get('/', async (req, res) => {
@@ -98,6 +126,39 @@ async function getIssuesBySerialNumber(serialNumberId) {
 	}
 }
 
+async function getProductNames() {
+	try {
+		const queryProductNames = 'SELECT CAST(printer_type_name AS character varying(255)) AS common_name, CAST(printer_type_id AS character varying(255)) AS title_id FROM printer_types UNION ALL select printer_part_name, printer_part_id  FROM printer_parts';
+		const { rows } = await db.query(queryProductNames);
+		return rows;
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
+async function getPrinterPartNames() {
+	try {
+		const queryPrinterPartNames = 'SELECT printer_part_id, printer_part_name, product_prices.price, product_prices.product_price_id, product_prices.start_date, product_prices.end_date FROM printer_parts INNER JOIN product_prices ON printer_parts.product_price_id=product_prices.product_price_id';
+		const { rows } = await db.query(queryPrinterPartNames);
+		return rows;
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
+async function getPrinterTypes() {
+	try {
+		const queryPrinterTypes = 'SELECT printer_type_name, printer_type_id, price, printer_types.product_price_id, start_date, end_date FROM printer_types INNER JOIN product_prices ON product_prices.product_price_id=printer_types.product_price_id';
+		const { rows } = await db.query(queryPrinterTypes);
+		return rows;
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
 async function getUserByUserId(userId) {
 	try {
 		const queryUserByUserId = 'SELECT first_name, last_name, org_id FROM users WHERE user_id=$1';
@@ -121,6 +182,32 @@ async function getPartNamesBySerialNumber(serialNumberId) {
 		return err;
 	}
 }
+
+/*app.get('/admin', async (req, res) => {
+    let productNameRows = await getProductNames();
+    let printerPartNames = await getPrinterPartNames();
+    let printerTypes = await getPrinterTypes();
+    res.render('admin', { productNames : JSON.stringify(productNameRows),
+                          printerPartNames : JSON.stringify(printerPartNames),
+                          printerTypes : JSON.stringify(printerTypes) });
+
+});*/
+
+/*app.get('/guide', async (req, res) => {
+    try {
+        const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
+        const queryPrintersByUserIdValues = [passedVariable];
+        const { rows } = await db.query(queryPrintersByUserId, queryPrintersByUserIdValues);
+
+        if (rows.length == 0) {
+            res.redirect('/error?username=DNE');
+        }
+        res.render('user', { rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber, firstName: user.first_name, lastName: user.last_name, orgId: user.org_id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});*/
 
 app.get('/user', async (req, res) => {
 	let passedVariable = req.query.username;
@@ -185,9 +272,19 @@ app.get('/join', async (req, res) => {
 	}
 });
 
-app.post('/submit-repair', async (req, res) => {
-    console.log('hellooogator');
+app.post('/submit-price', uploadCustom.single('file'), async (req, res) => {
+    let { productName, price, referer, screenshot  } = req.body;
+    console.log(req.file);
     console.log(req.body);
+    console.log(productName);
+    console.log(price);
+    console.log(referer);
+    console.log(screenshot);
+    res.status(200).send('OK');
+
+});
+
+app.post('/submit-repair', async (req, res) => {
 	let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, repair_cost, money_saved } = req.body;
 
 	if (assistBy == "") {
@@ -196,6 +293,9 @@ app.post('/submit-repair', async (req, res) => {
 	if (stationNumber == "") {
 		stationNumber = null;
 	}
+    if (timeSpentOnTask == "") {
+        timeSpentOnTask = 15;
+    }
 	if (partNameNeeded == "") {
 		partNameNeeded = null;
 	} else {
@@ -307,6 +407,7 @@ app.post('/submit-new-user', async (req, res) => {
 
 
 //FOR PRODUCTION
+
 http.createServer((req, res) => {
 	// Redirect to the HTTPS version of the same URL
 	res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
