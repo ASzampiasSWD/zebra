@@ -193,21 +193,14 @@ async function getPartNamesBySerialNumber(serialNumberId) {
 
 });*/
 
-/*app.get('/guide', async (req, res) => {
+app.get('/guide', async (req, res) => {
     try {
-        const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
-        const queryPrintersByUserIdValues = [passedVariable];
-        const { rows } = await db.query(queryPrintersByUserId, queryPrintersByUserIdValues);
-
-        if (rows.length == 0) {
-            res.redirect('/error?username=DNE');
-        }
-        res.render('user', { rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber, firstName: user.first_name, lastName: user.last_name, orgId: user.org_id });
+        res.render('guide', { });
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
     }
-});*/
+});
 
 app.get('/user', async (req, res) => {
 	let passedVariable = req.query.username;

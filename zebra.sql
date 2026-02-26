@@ -75,7 +75,7 @@ CREATE TABLE repairs(
  assist_id varchar(100) REFERENCES users(user_id) DEFAULT NULL,
  printer_location varchar(100) NOT NULL,
  station_number varchar(50) NULL, 
- time_worked_on integer NOT NULL,
+ time_worked_on integer DEFAULT 15.00,
  comments varchar(100),
  repair_cost numeric(10, 2) DEFAULT 0.00,
  money_saved numeric(10, 2) DEFAULT 0.00, 

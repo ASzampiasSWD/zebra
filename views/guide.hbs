@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<!-- Bootstrap CSS -->
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="styles/index.css" />
+	<style>
+		.table-bordered th,
+		.table-bordered td {
+			border-color: #88a7d9 !important;
+		}
+	</style>
+	<title>Save the Zebras</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="">Zebra Printers</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="/">Add Repair</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/list">Fixed Printer List</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/join">Add User</a>
+				</li>
+                <li class="nav-item active">
+					<a class="nav-link" href="/guide">Guide</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<br /><br />
+    
+    <div class="w-75 justify-content-center" style="margin: 0 auto;">
+        <h2>Part Catalogs</h2>
+        <table>
+            <tr>
+                <td>ZT411</td> 
+                <td><a target="_blank" href="pdfs/zt411-parts-catalog-en-us.pdf">zt411-parts-catalog-en-us.pdf</a></td>
+            </tr>
+            <tr>
+                <td>ZD620</td> 
+                <td><a target="_blank" href="pdfs/zd620-direct-thermal-parts-catalog-en-us.pdf">zd620-direct-thermal-parts-catalog-en-us.pdf</a></td>
+            </tr>
+            <tr>
+                <td>ZD621</td> 
+                <td><a target="_blank" href="pdfs/zd621-direct-thermal-parts-catalog.pdf">zd621-direct-thermal-parts-catalog.pdf</a></td>
+            </tr>
+        </table>
+        <br />
+        <table class="table table-bordered" style="width: 900px" id="repairTable">
+			<thead>
+				<tr style="background-color: #9db9fa; text-align: center;">
+					<th scope="col">Image</th>
+					<th scope="col">Name</th>
+					<th scope="col">Code</th>
+                    <th scope="col">Part Used In</th>
+				</tr>
+			</thead>
+			<tbody id="repairTBody">
+                <tr>
+                    <th scope="col" width="200px;"><img width="250" height="200" src="images/guide/zt411-Printhead.jpg" /></th>
+                    <th scope="col" width="200px;">Printhead</th>
+                    <th scope="col" width="200px;">P1058930-010</th>
+                    <th scope="col" width="300px;">SLAM/RFID</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-PlatenRoller.jpg" /></th>
+                    <th scope="col">Platen Roller</th>
+                    <th scope="col">P1058930-080</th>
+                    <th scope="col">SLAM/RFID</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-Motherboard.jpg" /></th>
+                    <th scope="col">Motherboard</th>
+                    <th scope="col">P1105147-007</th>
+                    <th scope="col">SLAM/RFID</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-DriverBelt.jpg" /></th>
+                    <th scope="col">Driver Belt</th>
+                    <th scope="col">79867M</th>
+                    <th scope="col">SLAM/RFID</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-MediaRewindSpindle.jpg" /></th>
+                    <th scope="col">Media Rewind Spindle</th>
+                    <th scope="col">P1058930-058</th>
+                    <th scope="col">SLAM</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-Peel-Assembly-Roller.jpg" /></th>
+                    <th scope="col">Peel Assembly Roller</th>
+                    <th scope="col">77197M</th>
+                    <th scope="col">SLAM</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-ToggleBar.jpg" /></th>
+                    <th scope="col">Toggle Bar</th>
+                    <th scope="col">P1058930-104</th>
+                    <th scope="col">SLAM</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-ZSeriesScrews.jpg" /></th>
+                    <th scope="col">Z-Series Screws</th>
+                    <th scope="col">43894</th>
+                    <th scope="col">SLAM/RFID</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt411-PrinterBoots.jpg" /></th>
+                    <th scope="col">Printer Boots</th>
+                    <th scope="col">P1058930-078</th>
+                    <th scope="col">SLAM/RFID</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zt620-printhead.png" /></th>
+                    <th scope="col">Printhead</th>
+                    <th scope="col">N/A</th>
+                    <th scope="col">PSlip/ASIN</th>
+                </tr>
+                 <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zd620-platenroller.jpg" /></th>
+                    <th scope="col">Platen Roller</th>
+                    <th scope="col">N/A</th>
+                    <th scope="col">PSlip/ASIN</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zd620-yellowarms.jpg" /></th>
+                    <th scope="col">Adjustable Yellow Arms</th>
+                    <th scope="col">N/A</th>
+                    <th scope="col">PSlip</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zd620-springs.jpg" /></th>
+                    <th scope="col">Springs</th>
+                    <th scope="col">N/A</th>
+                    <th scope="col">PSlip</th>
+                </tr>
+                <tr>
+                    <th scope="col"><img width="250" height="200" src="images/guide/zd620-mediawindow.jpg" /></th>
+                    <th scope="col">Media Window</th>
+                    <th scope="col">P1080383-400</th>
+                    <th scope="col">PSlip</th>
+                </tr>
+            </tbody>
+		</table>
+        
+    </div>
+	<br /><br /><br /><br /><br /><br />
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" src="scripts/sharedUtils.js"></script>
+	<!--<script>
+		function updateTable(event) {
+			changeTableContents(event.target.value);
+		}
+		const searchBar = document.getElementById('searchBar');
+		searchBar.addEventListener('input', updateTable);
+
+		window.onload = function () {
+			changeTableContents("");
+		}
+
+		function changeTableContents(strUserId) {
+			let tableBody = document.getElementById("repairTBody");
+			let rows = {{{rows}}};
+			tableBody.innerHTML = "";
+			let bFound = false;
+			Object.keys(rows).forEach(key => {
+				const value = rows[key];
+				if (value.user_id.includes(strUserId)) {
+					// Insert a new row at the end of the tbody (-1 index means the last position)
+					let newRow = tableBody.insertRow(-1);
+					bFound = true;
+					// Insert new cells into the row in the correct order (index starts at 0)
+					let cell1 = newRow.insertCell(0);
+					let cell2 = newRow.insertCell(1);
+					let cell3 = newRow.insertCell(2);
+					let cell4 = newRow.insertCell(3);
+					let cell5 = newRow.insertCell(4);
+					let cell6 = newRow.insertCell(5);
+					let cell7 = newRow.insertCell(6);
+					let cell8 = newRow.insertCell(7);
+					let cell9 = newRow.insertCell(8);
+					// Add data to the cells
+					cell1.innerHTML = value.repair_id;
+					cell2.innerHTML = '<a href="/printer?serial=' + value.serial_number_id + '">' + value.serial_number_id + '</a>';
+					cell3.innerHTML = value.printer_type_name;
+					cell4.innerHTML = '<a href="/user?username=' + value.user_id + '">' + value.user_id + '</a>';
+					cell5.innerHTML = value.printer_location;
+					cell6.innerHTML = value.station_number;
+					cell7.innerHTML = '$' + usMoneyFormatter.format(value.repair_cost);
+					cell8.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
+					cell9.innerHTML = transformDate(value.date_time_fixed);
+				}
+			});
+			if (bFound == false) {
+				let newRow = tableBody.insertRow(-1);
+				let cell = newRow.insertCell(0);
+				cell.innerHTML = 'No contents were found';
+				cell.colSpan = 9;
+				cell.style.textAlign = 'center';
+			}
+		}
+	</script>-->
+</body>
+</html>
