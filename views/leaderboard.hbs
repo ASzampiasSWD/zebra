@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="styles/index.css" />
+	<style>
+		.table-bordered th,
+		.table-bordered td {
+			border-color: #88a7d9 !important;
+		}
+	</style>
+	<title>Save the Zebras</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="">Zebra Printers</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="/">Add Repair</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/list">Fixed Printer List</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/join">Add User</a>
+				</li>
+                <li class="nav-item">
+					<a class="nav-link" href="/guide">Guide</a>
+				</li>
+                <li class="nav-item active">
+					<a class="nav-link" href="/leaderboard">Leaderboard</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<br /><br />
+	<div class="w-75 justify-content-center" style="margin: 0 auto;">
+		<h2>Leaderboard</h2>
+		<hr />
+		<h2>Top Ten Orgs</h2>
+	<table class="table table-bordered w-75" id="leaderboardTable">
+		<thead style="background-color: #9db9fa;">
+			<tr>
+				<th scope="col">Rank</th>
+				<th scope="col">Org Name</th>
+				<th scope="col">Total Printers Fixed</th>
+				<th scope="col">Total Money Saved</th>
+				<th scope="col">Total Spent on Repairs</th>
+			</tr>
+		</thead>
+		<tbody id="leaderboardTBody">
+		</tbody>
+	</table>
+
+	<h2>Top Ten Users</h2>
+	<table class="table table-bordered w-75" id="UserTable">
+		<thead style="background-color: #9db9fa;">
+			<tr>
+				<th scope="col">Rank</th>
+				<th scope="col">Org Name</th>
+				<th scope="col">Username</th>
+				<th scope="col">Total Printers Fixed</th>
+				<th scope="col">Total Money Saved</th>
+				<!--<th scope="col">Total Spent on Repairs</th>-->
+			</tr>
+		</thead>
+		<tbody id="userTBody">
+		</tbody>
+	</table>
+	<br /><br />
+	</div>
+	<!--</div>-->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" src="scripts/sharedUtils.js"></script>
+	<script>
+		window.onload = function () {
+			setOrgLeaderboard();
+			setUserLeaderboard();
+		}
+		function setOrgLeaderboard() {
+			let tableBody = document.getElementById("leaderboardTBody");
+            tableBody.innerHTML = "";
+            let repairRow = {{{repairRows}}};
+           	Object.keys(repairRow).forEach(key => {
+				const value = repairRow[key];
+				let newRow = tableBody.insertRow(-1);
+				let cell1 = newRow.insertCell(0);
+				let cell2 = newRow.insertCell(1);
+				let cell3 = newRow.insertCell(2);
+				let cell4 = newRow.insertCell(3);
+				let cell5 = newRow.insertCell(4);
+				cell1.innerHTML = parseInt(key) + 1;
+				cell2.innerHTML = '<a href="/org?orgid=' + value.org_id + '">' + value.org_id + '</a>';
+				cell3.innerHTML = value.count;
+				cell4.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
+				cell5.innerHTML = '$' + usMoneyFormatter.format(value.repair_cost);
+			});
+        }
+		function setUserLeaderboard() {
+        	let tableBody = document.getElementById("userTBody");
+            tableBody.innerHTML = "";
+            let userRows = {{{userRows}}};
+           	Object.keys(userRows).forEach(key => {
+				const value = userRows[key];
+				let newRow = tableBody.insertRow(-1);
+				let cell1 = newRow.insertCell(0);
+				let cell2 = newRow.insertCell(1);
+				let cell3 = newRow.insertCell(2);
+				let cell4 = newRow.insertCell(3);
+				let cell5 = newRow.insertCell(4);
+				cell1.innerHTML = parseInt(key) + 1;
+				cell2.innerHTML = '<a href="/org?orgid=' + value.org_id + '">' + value.org_id + '</a>';
+				cell3.innerHTML = '<a href="/user?username=' + value.user_id + '">' + value.user_id + '</a>';
+				cell4.innerHTML = value.total_repairs;
+				cell5.innerHTML = '$' + usMoneyFormatter.format(value.money_saved);
+			});
+        }
+	</script>
+</body>
+</html>

@@ -126,6 +126,18 @@ async function getIssuesBySerialNumber(serialNumberId) {
 	}
 }
 
+async function getOrgByOrgId(orgId) {
+	try {
+		const queryOrgByOrgId = 'select * FROM organizations WHERE org_id = $1';
+		const queryOrgByOrgIdValues = [orgId];
+		const { rows } = await db.query(queryOrgByOrgId, queryOrgByOrgIdValues);
+		return rows;
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
 async function getProductNames() {
 	try {
 		const queryProductNames = 'SELECT CAST(printer_type_name AS character varying(255)) AS common_name, CAST(printer_type_id AS character varying(255)) AS title_id FROM printer_types UNION ALL select printer_part_name, printer_part_id  FROM printer_parts';
@@ -161,10 +173,74 @@ async function getPrinterTypes() {
 
 async function getUserByUserId(userId) {
 	try {
-		const queryUserByUserId = 'SELECT first_name, last_name, org_id FROM users WHERE user_id=$1';
+		const queryUserByUserId = 'SELECT * FROM users WHERE user_id=$1';
 		const queryUserByUserIdValues = [userId];
 		const { rows } = await db.query(queryUserByUserId, queryUserByUserIdValues);
 		return rows[0];
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
+async function insertOrganizationByUser(orgId) {
+	const upperOrg = orgId.toUpperCase();
+	const insertOrgByUser = 'INSERT INTO organizations VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+	const insertOrgByUserValues = [upperOrg, 'TODO', 'TODO', 'VA', '12345', 'USA'];
+
+	try {
+		let dbAnswer = await db.query(insertOrgByUser, insertOrgByUserValues);
+		return dbAnswer;
+	} catch (err) {
+		/*if (err.detail.includes('Org creation error occured.')) {
+			let linky = '/error?username=' + upperOrg;
+			res.redirect(linky);
+		}*/
+		//res.send('something happened' + err);
+		console.log(err);
+	}
+}
+
+async function getOrgByOrgId(orgId) {
+	try {
+		const queryOrganizationsByOrgId = 'SELECT * FROM organizations WHERE org_id=$1';
+		const queryOrganizationsByOrgIdValues = [orgId];
+		const { rows } = await db.query(queryOrganizationsByOrgId, queryOrganizationsByOrgIdValues);
+		return rows[0];
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
+async function getUsersByOrgId(orgId) {
+	try {
+		const queryUserByOrgId = 'SELECT * FROM users WHERE org_id = $1';
+		const queryUserByOrgIdValues = [orgId];
+		const { rows } = await db.query(queryUserByOrgId, queryUserByOrgIdValues);
+		return rows;
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
+async function getTotalRepairsByAllOrgs() {
+	try {
+		const queryTotalRepairsByOrgs = 'SELECT users.org_id, COUNT(users.org_id), SUM(repair_cost) AS repair_cost, SUM(money_saved) AS money_saved FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id INNER JOIN users ON repairs.user_id=users.user_id GROUP BY users.org_id ORDER BY count DESC';
+		const { rows } = await db.query(queryTotalRepairsByOrgs);
+		return rows;
+	} catch (err) {
+		console.error(err);
+		return err;
+	}
+}
+
+async function getBestUsersFromAllOrgs() {
+	try {
+		const queryBestUsersFromAllOrgs = 'SELECT repairs.user_id, COUNT(repair_id) as "total_repairs", SUM(repair_cost) AS repair_cost, SUM(money_saved) AS money_saved, users.org_id FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id INNER JOIN users ON repairs.user_id=users.user_id GROUP BY repairs.user_id, users.org_id ORDER BY "total_repairs" DESC';
+		const { rows } = await db.query(queryBestUsersFromAllOrgs);
+		return rows;
 	} catch (err) {
 		console.error(err);
 		return err;
@@ -207,14 +283,19 @@ app.get('/user', async (req, res) => {
 	let assistNumber = await getAssistNumbers(passedVariable);
 	let user = await getUserByUserId(passedVariable);
 	try {
-		const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id';
+		const queryPrintersByUserId = 'SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id WHERE user_id = $1 ORDER BY repair_id DESC';
 		const queryPrintersByUserIdValues = [passedVariable];
 		const { rows } = await db.query(queryPrintersByUserId, queryPrintersByUserIdValues);
-
-		if (rows.length == 0) {
+		if (user == undefined) {
 			res.redirect('/error?username=DNE');
 		}
-		res.render('user', { rows: JSON.stringify(rows), userId: passedVariable, assistNumber: assistNumber, firstName: user.first_name, lastName: user.last_name, orgId: user.org_id });
+		res.render('user', { rows: JSON.stringify(rows), 
+                            userId: passedVariable, 
+                            assistNumber: assistNumber, 
+                            firstName: user.first_name, 
+                            lastName: user.last_name, 
+                            orgId: user.org_id,
+							created_at : getFormattedDate(user.created_at) });
 	} catch (err) {
 		console.error(err);
 		res.status(500).send('Server Error');
@@ -245,10 +326,48 @@ app.get('/printer', async (req, res) => {
 	}
 })
 
+app.get('/org', async (req, res) => {
+	let orgId = req.query.orgid;
+	const queryRepairsByOrgId = 'select repair_id, repairs.serial_number_id, printer_types.printer_type_name, users.user_id, users.org_id, repairs.printer_location, repairs.station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN users on users.user_id=repairs.user_id INNER JOIN organizations ON organizations.org_id=users.org_id INNER JOIN printers ON printers.serial_number_id = repairs.serial_number_id INNER JOIN printer_types ON printer_types.printer_type_id=printers.printer_type_id WHERE organizations.org_id = $1 ORDER BY date_time_fixed DESC;';
+	const queryRepairsByOrgIdValues = [orgId];
+	try {
+		const { rows } = await db.query(queryRepairsByOrgId, queryRepairsByOrgIdValues);
+        let userRows = await getUsersByOrgId(orgId);
+        let orgRow = await getOrgByOrgId(orgId);
+        let repairRow = await getTotalRepairsByAllOrgs();
+
+		if (rows.length == 0) {
+			res.redirect('/error?org=DNE');
+		}
+		res.render('org', {
+			rows: JSON.stringify(rows),
+            userRows : JSON.stringify(userRows),
+            orgRow : orgRow,
+            repairRow : JSON.stringify(repairRow),
+            orgId: orgId.toString()
+		});
+	} catch (err) {
+		console.error(err);
+		res.status(500).send('Server Error');
+	}
+})
+
 app.get('/list', async (req, res) => {
 	try {
-		const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, user_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id ORDER BY repair_id');
+		const { rows } = await db.query('SELECT repair_id, repairs.serial_number_id, printer_types.printer_type_name, repairs.user_id, users.org_id, printer_location, station_number, repair_cost, money_saved, date_time_fixed FROM repairs INNER JOIN printers ON repairs.serial_number_id = printers.serial_number_id INNER JOIN printer_types ON printers.printer_type_id = printer_types.printer_type_id INNER JOIN users ON repairs.user_id=users.user_id ORDER BY repair_id DESC');
 		res.render('list', { rows: JSON.stringify(rows) });
+	} catch (err) {
+		console.error(err);
+		res.status(500).send('Server Error');
+	}
+});
+
+app.get('/leaderboard', async (req, res) => {
+	try {
+		let repairRows = await getTotalRepairsByAllOrgs();
+        let userRows = await getBestUsersFromAllOrgs();
+        res.render('leaderboard', { repairRows: JSON.stringify(repairRows),
+                                    userRows : JSON.stringify(userRows) });
 	} catch (err) {
 		console.error(err);
 		res.status(500).send('Server Error');
@@ -377,13 +496,20 @@ app.post('/submit-repair', async (req, res) => {
 });
 
 app.post('/submit-new-user', async (req, res) => {
-	const { selectOrgId, userId, firstName, lastName } = req.body;
+	const { orgId, userId, firstName, lastName } = req.body;
 	const lowerCaseUserId = userId.toLowerCase();
-	const text = 'INSERT INTO users(user_id, org_Id, first_name, last_name) VALUES($1, $2, $3, $4) RETURNING *';
-	const values = [lowerCaseUserId, selectOrgId, firstName, lastName];
+	let upperOrg = orgId.toUpperCase();
+	let currentOrg = await getOrgByOrgId(upperOrg);
+
+	if (currentOrg == undefined) {
+		let dbAnswer = await insertOrganizationByUser(upperOrg);
+	}
+
+	const insertUser = 'INSERT INTO users(user_id, org_Id, first_name, last_name) VALUES($1, $2, $3, $4) RETURNING *';
+	const insertUserValues = [lowerCaseUserId, upperOrg, firstName, lastName];
 
 	try {
-		await db.query(text, values);
+		await db.query(insertUser, insertUserValues);
 		res.redirect('/success');
 	} catch (err) {
 		if (err.detail.includes('already exists.')) {
@@ -396,8 +522,8 @@ app.post('/submit-new-user', async (req, res) => {
 // FOR TEST WITHOUT CERTS
 /*app.listen(3000, () => {
   console.log(`Example app listening on port 3000!`);
-});*/
-
+});
+*/
 
 //FOR PRODUCTION
 

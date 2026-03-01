@@ -6,7 +6,6 @@ function transformDate(strDate) {
 	let dateObject = new Date(dtDate);
 	const options = { hour: '2-digit', minute: '2-digit' };
 	const timeWithoutSeconds = dateObject.toLocaleTimeString(undefined, options);
-	console.log(dateObject.toLocaleDateString() + " " + timeWithoutSeconds);
 	return dateObject.toLocaleDateString() + " " + timeWithoutSeconds;
 }
 

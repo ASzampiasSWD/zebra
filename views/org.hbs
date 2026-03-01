@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<title>Save the Zebras</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<!-- Bootstrap CSS -->
 	<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -14,7 +14,6 @@
 			border-color: #88a7d9 !important;
 		}
 	</style>
-	<title>Save the Zebras</title>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -23,6 +22,7 @@
 			aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
+
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
@@ -37,7 +37,7 @@
                 <li class="nav-item">
 					<a class="nav-link" href="/guide">Guide</a>
 				</li>
-                <li class="nav-item">
+                 <li class="nav-item">
 					<a class="nav-link" href="/leaderboard">Leaderboard</a>
 				</li>
 			</ul>
@@ -47,17 +47,56 @@
 	<div class="w-75 justify-content-center" style="margin: 0 auto;">
 		<div class="row">
 			<div class="col">
-				<h2>Repairs</h2>
-			</div>
-			<div class="col">
-			</div>
-			<div class="col">
-			</div>
-			<div class="col">
-				<input class="form-control align-right" type="text" id="searchBar" placeholder="Search by Term..." />
+				<h2>Org Stats: {{{orgId}}}</h2>
 			</div>
 		</div>
 		<hr />
+        <h3>Org Information</h3>
+        <table class="table table-bordered w-75" id="orgTable">
+            <thead style="background-color: #9db9fa;">
+                <tr>
+                    <th scope="col">Street Name</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Country</th>
+                </tr>
+            </thead>
+            <tbody id="orgTBody">
+                <tr>
+                    <td>{{{orgRow.street_name}}}</td>
+                    <td>{{{orgRow.city}}}</td>
+                    <td>{{{orgRow.us_state}}}</td>
+                    <td>{{{orgRow.country}}}</td>
+                </tr>
+            </tbody>
+		</table>
+        <h3>Leaderboard</h3>
+        <table class="table table-bordered w-75" id="leaderboardTable">
+            <thead style="background-color: #9db9fa;">
+                <tr>
+                    <th scope="col">Org Rank</th>
+                    <th scope="col">Total Printers Fixed</th>
+                    <th scope="col">Total Money Saved</th>
+                    <th scope="col">Total Spent on Repairs</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardTBody">
+            </tbody>
+		</table>
+        <h3>All Users</h3>
+        <table class="table table-bordered w-75" id="userTable">
+            <thead style="background-color: #9db9fa;">
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Joined On</th>
+                </tr>
+            </thead>
+            <tbody id="userTBody">
+            </tbody>
+		</table>
+		<h3>All Repairs</h3>
 		<table class="table table-bordered" id="repairTable">
 			<thead style="background-color: #9db9fa;">
 				<tr>
@@ -77,7 +116,7 @@
 			</tbody>
 		</table>
 	</div>
-	<br /><br /><br /><br /><br /><br />
+	<br /><br />
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
@@ -88,36 +127,91 @@
 		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
 		crossorigin="anonymous"></script>
 	<script type="text/javascript" src="scripts/sharedUtils.js"></script>
-	<script>
-		function updateTable(event) {
+    <script>
+        		function updateTable(event) {
 			changeTableContents(event.target.value);
 		}
-		const searchBar = document.getElementById('searchBar');
-		searchBar.addEventListener('input', updateTable);
+		//const searchBar = document.getElementById('searchBar');
+		//searchBar.addEventListener('input', updateTable);
 
 		window.onload = function () {
 			changeTableContents("");
+            setTableUserContents();
+            setLeaderboard();
+
 		}
+
+        function setLeaderboard() {
+           let tableBody = document.getElementById("leaderboardTBody");
+			let userRows = {{{userRows}}};
+            const urlParams = new URLSearchParams(window.location.search);
+            const orgId = urlParams.get('orgid');
+            tableBody.innerHTML = "";
+            let repairRow = {{{repairRow}}};
+            let placement = 1;
+            let placementText = '';
+            let totalPrintersFixed = 0;
+            let totalMoneySaved = 0.00;
+            let totalRepairCost = 0.00;
+           Object.keys(repairRow).forEach(key => {
+            const value = repairRow[key];
+            if (value.org_id.includes(orgId)) {
+                console.log(key);
+                placement += parseInt(key);
+                totalPrintersFixed = value.count;
+                totalMoneySaved = value.money_saved;
+                totalRepairCost = value.repair_cost;
+            }
+           });
+           placementText = placement + " out of " + repairRow.length;
+            let newRow = tableBody.insertRow(-1);
+            // Insert new cells into the row in the correct order (index starts at 0)
+            let cell1 = newRow.insertCell(0);
+            let cell2 = newRow.insertCell(1);
+            let cell3 = newRow.insertCell(2);
+            let cell4 = newRow.insertCell(3);
+            // Add data to the cells
+            cell1.innerHTML = placementText;
+            cell2.innerHTML = totalPrintersFixed;
+            cell3.innerHTML = '$' + usMoneyFormatter.format(totalMoneySaved);
+            cell4.innerHTML = '$' + usMoneyFormatter.format(totalRepairCost);
+        }
+
+
+
+        function setTableUserContents() {
+			let tableBody = document.getElementById("userTBody");
+			let userRows = {{{userRows}}};
+			tableBody.innerHTML = "";
+			let bFound = false;
+			Object.keys(userRows).forEach(key => {
+				const value1 = userRows[key];
+				//if (value.user_id.includes(strUserId)) {
+					// Insert a new row at the end of the tbody (-1 index means the last position)
+					let newRow = tableBody.insertRow(-1);
+					bFound = true;
+					// Insert new cells into the row in the correct order (index starts at 0)
+					let cell1 = newRow.insertCell(0);
+					let cell2 = newRow.insertCell(1);
+					let cell3 = newRow.insertCell(2);
+					let cell4 = newRow.insertCell(3);
+					// Add data to the cells
+					cell1.innerHTML = '<a href="/user?username=' + value1.user_id + '">' + value1.user_id + '</a>';
+                    cell2.innerHTML = value1.first_name;
+                    cell3.innerHTML = value1.last_name;
+                    cell4.innerHTML = transformDate(value1.created_at);
+				//}
+			});
+        }
 
 		function changeTableContents(strUserId) {
 			let tableBody = document.getElementById("repairTBody");
 			let rows = {{{rows}}};
 			tableBody.innerHTML = "";
 			let bFound = false;
-            let searchTerm = strUserId.toLowerCase();
 			Object.keys(rows).forEach(key => {
 				const value = rows[key];
-                if (value.station_number == null) {
-                    value.station_number = "";
-                }
-                let newDate = transformDate(value.date_time_fixed);
-                let newRepairCost = '$' + usMoneyFormatter.format(value.repair_cost);
-                let newMoneySaved = '$' + usMoneyFormatter.format(value.money_saved);
-				if (value.user_id.toLowerCase().includes(searchTerm) || value.org_id.toLowerCase().includes(searchTerm) ||
-                    value.printer_location.toLowerCase().includes(searchTerm) || value.station_number.toString().includes(searchTerm) ||
-                    value.printer_type_name.toLowerCase().includes(searchTerm) || value.serial_number_id.toLowerCase().includes(searchTerm) ||
-                    newRepairCost.toString().includes(searchTerm) || newMoneySaved.toLowerCase().includes(searchTerm) ||
-                    newDate.toLowerCase().includes(searchTerm) ) {
+				if (value.user_id.includes(strUserId)) {
 					// Insert a new row at the end of the tbody (-1 index means the last position)
 					let newRow = tableBody.insertRow(-1);
 					bFound = true;
@@ -148,11 +242,12 @@
 			if (bFound == false) {
 				let newRow = tableBody.insertRow(-1);
 				let cell = newRow.insertCell(0);
-				cell.innerHTML = 'No results were found';
+				cell.innerHTML = 'No contents were found';
 				cell.colSpan = 10;
 				cell.style.textAlign = 'center';
 			}
 		}
-	</script>
+    </script>
+	<br /><br /><br /><br />
 </body>
 </html>

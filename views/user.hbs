@@ -8,12 +8,6 @@
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="styles/index.css" />
 	<style>
-		body {
-			background-image: linear-gradient(180deg,
-					#9de7fa 100%,
-					#88a7d9 100%);
-		}
-
 		.table-bordered th,
 		.table-bordered td {
 			border-color: #88a7d9 !important;
@@ -42,6 +36,9 @@
                 <li class="nav-item">
 					<a class="nav-link" href="/guide">Guide</a>
 				</li>
+                <li class="nav-item">
+					<a class="nav-link" href="/leaderboard">Leaderboard</a>
+				</li>
 			</ul>
 		</div>
 	</nav>
@@ -49,30 +46,12 @@
 	<div class="w-75 justify-content-center" style="margin: 0 auto;">
 		<div class="row">
 			<div class="col">
-				<h2>Printers Repaired by User | {{{userId}}} | {{{firstName}}} {{{lastName}}} | {{{orgId}}}</h2>
+				<h2>User | {{{userId}}} | {{{firstName}}} {{{lastName}}} | {{{orgId}}}</h2>
 			</div>
 		</div>
 		<hr />
-		<h3>Repairs</h3>
-		<table class="table table-bordered" id="repairTable">
-			<thead>
-				<tr>
-					<th scope="col">Repair ID</th>
-					<th scope="col">Serial Number</th>
-					<th scope="col">Printer Type</th>
-					<th scope="col">User ID</th>
-					<th scope="col">Location</th>
-					<th scope="col">Station ID</th>
-					<th scope="col">Repair Cost</th>
-					<th scope="col">Money Saved</th>
-					<th scope="col">Date/Time Fixed</th>
-				</tr>
-			</thead>
-			<tbody id="repairTBody">
-			</tbody>
-		</table>
-		<table class="table table-bordered w-50">
-			<tr>
+        <table class="table table-bordered w-50">
+			<tr style="background-color: #9db9fa;">
 				<th colspan="2" class="text-center">User Stats</th>
 			</tr>
 			<tr>
@@ -91,7 +70,30 @@
 				<td class="col-2">Total Money Saved</td>
 				<td class="col-2" id="totalMoney"></td>
 			</tr>
+			<tr>
+				<td>Joined Date</td>
+				<td>{{{created_at}}}</td>
+			</tr>
 		</table>
+		<h3>Repairs</h3>
+		<table class="table table-bordered" id="repairTable">
+			<thead style="background-color: #9db9fa;">
+				<tr>
+					<th scope="col">Repair ID</th>
+					<th scope="col">Serial Number</th>
+					<th scope="col">Printer Type</th>
+					<th scope="col">User ID</th>
+					<th scope="col">Location</th>
+					<th scope="col">Station ID</th>
+					<th scope="col">Repair Cost</th>
+					<th scope="col">Money Saved</th>
+					<th scope="col">Date/Time Fixed</th>
+				</tr>
+			</thead>
+			<tbody id="repairTBody">
+			</tbody>
+		</table>
+        <br /><br />
 	</div>
 	<br /><br />
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -111,6 +113,14 @@
 			let totalMoneySaved = 0;
 			let totalRepairCost = 0;
 			document.getElementById('totalRepairs').innerHTML = rows.length;
+
+            if (rows.length == 0) {
+                let newRow = tableBody.insertRow(-1);
+				let cell1 = newRow.insertCell(0);
+                cell1.colSpan = 9;
+                cell1.style.textAlign = 'center';
+                cell1.innerHTML = "No Results Found";
+            }
 
 			Object.keys(rows).forEach(key => {
 				const value = rows[key];

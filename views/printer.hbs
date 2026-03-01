@@ -37,6 +37,9 @@
                 <li class="nav-item">
 					<a class="nav-link" href="/guide">Guide</a>
 				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/leaderboard">Leaderboard</a>
+				</li>
 			</ul>
 		</div>
 	</nav>
@@ -50,7 +53,7 @@
 		<hr />
 		<h3>Printer Information</h3>
 		<table class="table table-bordered" id="printerTable">
-			<thead>
+			<thead style="background-color: #9db9fa;">
 				<th>Serial Number</th>
 				<th>Printer Type</th>
 				<th>Warranty Start Date</th>
@@ -70,7 +73,7 @@
 		</table>
 		<h3>Repairs</h3>
 		<table class="table table-bordered" id="repairTable">
-			<thead>
+			<thead style="background-color: #9db9fa;">
 				<tr>
 					<th scope="col">Repair ID</th>
 					<!--<th scope="col">Serial Number</th>-->
@@ -89,7 +92,7 @@
 		</table>
 		<h3>Issues</h3>
 		<table class="table table-bordered" id="issuesTable">
-			<thead>
+			<thead style="background-color: #9db9fa;">
 				<tr>
 					<th scope="col">Repair ID</th>
 					<th scope="col">Issue Description</th>
@@ -100,7 +103,7 @@
 		</table>
 		<h3>Parts Used</h3>
 		<table class="table table-bordered" id="partsTable">
-			<thead>
+			<thead style="background-color: #9db9fa;">
 				<tr>
 					<th scope="col">Repair ID</th>
 					<th scope="col">Part Number</th>
@@ -114,7 +117,7 @@
 
 		<h3>All Time Stats</h3>
 		<table class="table table-bordered w-50">
-			<tr>
+			<tr style="background-color: #9db9fa;">
 				<th colspan="2" class="text-center">Stats</th>
 			</tr>
 			<tr>
@@ -142,11 +145,9 @@
 		window.onload = function () {
 			let tableBody = document.getElementById("repairTBody");
 			let rows = {{{ rows }}};
-			console.log(rows);
 			let issueRows = {{{ issueRows }}};
 			let totalMoneySaved = 0;
 			document.getElementById('totalTimesRepaired').innerHTML = rows.length;
-
 			document.getElementById('serialNumber').innerHTML = rows[0].serial_number_id;
 			document.getElementById('printerType').innerHTML = rows[0].printer_type_name;
 			document.getElementById('warrantyStartDate').innerHTML = transformDate(rows[0].warranty_start_date);
