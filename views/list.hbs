@@ -13,6 +13,11 @@
 		.table-bordered td {
 			border-color: #88a7d9 !important;
 		}
+		#pageSelectors a:hover { text-decoration: none; }
+
+		#pageSelectors a { padding-left: 5px; }
+
+		#pageSelectors .active { font-weight: bold; }
 	</style>
 	<title>Save the Zebras</title>
 </head>
@@ -51,7 +56,9 @@
 			</div>
 			<div class="col">
 			</div>
-			<div class="col">
+			<div class="col" style="text-align: right; vertical-align: middle;">
+				<!--<p class="form-control" id="pageSelectors" style="background-color: #9de7fa; border: 1px solid #9de7fa;">
+				</p>-->
 			</div>
 			<div class="col">
 				<input class="form-control align-right" type="text" id="searchBar" placeholder="Search by Term..." />
@@ -76,6 +83,10 @@
 			<tbody id="repairTBody">
 			</tbody>
 		</table>
+		<div style="text-align: right; vertical-align: middle;">
+			<p id="pageSelectors" style="padding-right: 10px; font-size: 1.3rem;">
+			</p>
+		</div>
 	</div>
 	<br /><br /><br /><br /><br /><br />
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -89,19 +100,43 @@
 		crossorigin="anonymous"></script>
 	<script type="text/javascript" src="scripts/sharedUtils.js"></script>
 	<script>
+		let pastPageSelection = 'pageLink1';
+		let rowsLength = 0;
 		function updateTable(event) {
-			changeTableContents(event.target.value);
+			changeTableContents(event.target.value, rowsLength);
 		}
 		const searchBar = document.getElementById('searchBar');
 		searchBar.addEventListener('input', updateTable);
 
 		window.onload = function () {
-			changeTableContents("");
+			let rows = {{{rows}}};
+			changeTableContents("", rows.length);
+			calculatePages(rows.length);
 		}
 
-		function changeTableContents(strUserId) {
+		function calculatePages(rowsLength) {
+			let currentNumber = rowsLength;
+			let count = 0;
+			while (currentNumber > 0) {
+				count = count + 1;
+				document.getElementById("pageSelectors").innerHTML += "<a id='" + currentNumber + "'style='color: black; padding-left: 10px;' onclick='clickPageLink(this)'>" + count + "</a>";
+				currentNumber = currentNumber - 25;
+			}
+			document.getElementById(rowsLength).classList.add('active');
+			pastPageSelection = rowsLength;
+		}
+
+		function clickPageLink(event) {
+			document.getElementById(pastPageSelection).classList.remove("active");
+			document.getElementById(event.id).classList.add("active");
+			pastPageSelection = event.id;
+			changeTableContents("", event.id);
+		}
+
+		function changeTableContents(strUserId, pageNumber) {
 			let tableBody = document.getElementById("repairTBody");
 			let rows = {{{rows}}};
+			rowsLength = rows.length;
 			tableBody.innerHTML = "";
 			let bFound = false;
             let searchTerm = strUserId.toLowerCase();
@@ -110,6 +145,10 @@
                 if (value.station_number == null) {
                     value.station_number = "";
                 }
+
+				if (value.repair_id > pageNumber || value.repair_id <= pageNumber - 25) {
+					return;
+				}
                 let newDate = transformDate(value.date_time_fixed);
                 let newRepairCost = '$' + usMoneyFormatter.format(value.repair_cost);
                 let newMoneySaved = '$' + usMoneyFormatter.format(value.money_saved);
