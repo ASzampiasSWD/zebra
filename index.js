@@ -8,7 +8,7 @@ const app = express();
 var pg = require('pg');
 const db = require('./db');
 const warranty = require('./warranty');
-const credentials = require('./credentials');
+//const credentials = require('./credentials');
 var favicon = require('serve-favicon');
 
 // Set up Handlebars view engine
@@ -52,8 +52,6 @@ const storage = multer.diskStorage({
 
 const uploadCustom = multer({ storage: storage });
 
-
-// Define a route to render a view
 app.get('/', async (req, res) => {
 	try {
 		let printerTypes = await db.query('SELECT printer_type_id, printer_type_name, price FROM printer_types INNER JOIN product_prices ON printer_types.product_price_id=product_prices.product_price_id');
@@ -186,18 +184,14 @@ async function getUserByUserId(userId) {
 async function insertOrganizationByUser(orgId) {
 	const upperOrg = orgId.toUpperCase();
 	const insertOrgByUser = 'INSERT INTO organizations VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-	const insertOrgByUserValues = [upperOrg, 'TODO', 'TODO', 'VA', '12345', 'USA'];
+	const insertOrgByUserValues = [upperOrg, 'TODO', 'TODO', 'NA', 'N/A', 'N/A'];
 
 	try {
 		let dbAnswer = await db.query(insertOrgByUser, insertOrgByUserValues);
 		return dbAnswer;
 	} catch (err) {
-		/*if (err.detail.includes('Org creation error occured.')) {
-			let linky = '/error?username=' + upperOrg;
-			res.redirect(linky);
-		}*/
-		//res.send('something happened' + err);
 		console.log(err);
+		return err;
 	}
 }
 
@@ -519,14 +513,12 @@ app.post('/submit-new-user', async (req, res) => {
 	}
 })
 
+/*
 // FOR TEST WITHOUT CERTS
-/*app.listen(3000, () => {
+app.listen(3000, () => {
   console.log(`Example app listening on port 3000!`);
 });
-*/
-
 //FOR PRODUCTION
-
 http.createServer((req, res) => {
 	// Redirect to the HTTPS version of the same URL
 	res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
@@ -538,4 +530,9 @@ http.createServer((req, res) => {
 const httpsServer = https.createServer(credentials.credentials, app);
 httpsServer.listen(443, () => {
 	console.log('HTTPS Server running on port 443');
+});*/
+
+const server = http.createServer(app);
+server.listen(3000, () => {
+	console.log('Server is running on port 3000');
 });
