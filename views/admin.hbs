@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="styles/index.css" />
+  <link rel="stylesheet" type="text/css" href="styles/font.css" />
+  <title>Save the Zebras</title>
+  	<style type="text/css">
+		.container { max-width: 1500px; }
+
+		.table-bordered th,
+		.table-bordered td {
+			border-color: #88a7d9 !important;
+		}
+	</style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href=""> Zebra Printers</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Add Repair</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/list">Fixed Printer List</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/join">Add User</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <br /><br />
+  <div class="container">
+    <h2>Add Price</h2>
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <form action="/submit-price" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="selectProductName">Product Name</label><br />
+            <select id="selectProductName" name="productName"
+              class="form-select form-control form-select-lg" onchange="recordProductName(event)" required>
+              <option value="">LOAD</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <input type="number" class="form-control" id="price" autocapitalize="off" name="price" maxlength="5" required />
+          </div>
+          <div class="mb-3">
+            <label for="referer">Referer</label><br />
+            <select id="referer" name="referer"
+              class="form-select form-control form-select-lg">
+              <option value="DSCS">DSCS</option>
+              <option vlaue="Coupa">Coupa</option>
+              <option value="Zebra Store">Zebra Store</option>
+            </select>
+          </div>
+          <div class="mb-3">
+        	<label for="file" class="form-label">Screenshot of Price</label>
+        	<input class="form-control" type="file" id="file" name="file" />
+          </div>
+		  
+		  <div class="mb-3">
+        	<label for="screenshot" class="form-label">Admin Code</label>
+        	<input class="form-control" type="input" id="code" name="code" required />
+          </div>
+          <button type="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+	  <div class="col-8">
+	  	<table class="table table-bordered" id="printerPartsTable">
+				<thead>
+					<tr>
+						<th scope="col">Name</th>
+						<th scope="col">Printer Part ID</th>
+						<th scope="col">Price</th>
+						<th scope="col">Product Price ID</th>
+						<th scope="col">Start Date</th>
+						<th scope="col">End Date</th>
+					</tr>
+				</thead>
+				<tbody id="printerPartsTBody">
+				</tbody>
+		</table>
+	  </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="scripts/sharedUtils.js"></script>
+  <script type="text/javascript">
+	let pastChoice = '';
+	function recordProductName(e) {
+		if (pastChoice != '') {
+			document.getElementById(pastChoice).style.backgroundColor = '';
+			document.getElementById(pastChoice).style.border = '0';
+		}
+		document.getElementById(e.target.value).style.backgroundColor = 'lightgreen';
+		document.getElementById(e.target.value).style.border = '4px dashed white';
+		pastChoice = e.target.value;
+	}
+
+    function changePrinterTypeTitle(strNumber) {
+        switch (strNumber) {
+            case '1':
+                return "SLAM-Printer";
+                break;
+            case '2':
+                return 'RFID-Printer';
+                break;
+            case '3':
+                return 'PSlip-Printer';
+                break;
+            case '4':
+                return 'ASIN-Mobile-Carts-Printer';
+                break;
+            default:
+                return 'Error';
+        }
+    }
+
+
+    window.onload = function () {
+        //console.log(changePrinterTypeTitle('12'));
+    	let rows = {{{productNames}}};
+		const selectProductName = document.getElementById("selectProductName");
+		selectProductName.innerHTML = "";
+		let optionBlank = new Option("", "");
+		selectProductName.add(optionBlank);
+		Object.keys(rows).forEach(key => {
+		const value = rows[key];
+        let strTitle = value.title_id;
+        let optionName = value.common_name + " - " + strTitle;
+        if (value.title_id.length == 1) {
+            strTitle = changePrinterTypeTitle(value.title_id);
+            optionName = value.common_name;
+        }
+
+		let optionOrg = new Option(optionName, strTitle);
+		selectProductName.add(optionOrg);
+		});
+		changeTableContents("");
+    }
+
+		function changeTableContents(strUserId) {
+			let tableBody = document.getElementById("printerPartsTBody");
+			let rows = {{{printerPartNames}}};
+			let rows1 = {{{printerTypes}}};
+			tableBody.innerHTML = "";
+
+			Object.keys(rows1).forEach(key => {
+				const value = rows1[key];
+				// Insert a new row at the end of the tbody (-1 index means the last position)
+				let newRow = tableBody.insertRow(-1);
+                let strPrinterTypeName = value.printer_type_name.replaceAll(' ', '-');
+				newRow.id = strPrinterTypeName; //value.printer_type_name;
+				// Insert new cells into the row in the correct order (index starts at 0)
+				let cell1 = newRow.insertCell(0);
+				let cell2 = newRow.insertCell(1);
+				let cell3 = newRow.insertCell(2);
+				let cell4 = newRow.insertCell(3);
+				let cell5 = newRow.insertCell(4);
+				let cell6 = newRow.insertCell(5);
+				// Add data to the cells
+				cell1.innerHTML = value.printer_type_name;
+				cell2.innerHTML = value.printer_type_id;
+				cell3.innerHTML = '$' + usMoneyFormatter.format(value.price);
+				cell4.innerHTML = value.product_price_id;
+				cell5.innerHTML = transformDate(value.start_date);
+				cell6.innerHTML = 'Current';	
+			});
+
+			Object.keys(rows).forEach(key => {
+				const value = rows[key];
+				let newRow = tableBody.insertRow(-1);
+				newRow.id = value.printer_part_id;
+				let cell1 = newRow.insertCell(0);
+				let cell2 = newRow.insertCell(1);
+				let cell3 = newRow.insertCell(2);
+				let cell4 = newRow.insertCell(3);
+				let cell5 = newRow.insertCell(4);
+				let cell6 = newRow.insertCell(5);
+				cell1.innerHTML = value.printer_part_name;
+				cell2.innerHTML = value.printer_part_id;
+				cell3.innerHTML = '$' + usMoneyFormatter.format(value.price);
+				cell4.innerHTML = value.product_price_id;
+				cell5.innerHTML = transformDate(value.start_date);
+				cell6.innerHTML = 'Current';	
+			});
+		}
+
+  </script>
+  <script type="text/javascript" src="scripts/jquery-3.3.1.slim.min.js"></script>
+  <script type="text/javascript" src="scripts/popper.min.js"></script>
+  <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+</body>
+</html>
