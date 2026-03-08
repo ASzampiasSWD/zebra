@@ -392,7 +392,7 @@ app.post('/submit-price', uploadCustom.single('file'), async (req, res) => {
 
 app.post('/submit-repair', async (req, res) => {
 	let { serialNumberId, userId, printerType, partNameNeeded, printerLocation, stationNumber, issue, assistBy, timeSpentOnTask, comments, repair_cost, money_saved } = req.body;
-
+	serialNumberId = serialNumberId.toUpperCase();
 	if (assistBy == "") {
 		assistBy = null;
 	}
